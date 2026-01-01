@@ -1,0 +1,117 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet id="001-create-users-table" author="antigravity">
+        <createTable tableName="users">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="varchar(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="full_name" type="varchar(100)"/>
+            <column name="email" type="varchar(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="002-create-hotels-table" author="antigravity">
+        <createTable tableName="hotels">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="owner_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_hotels_owner" references="users(id)"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="varchar(255)"/>
+            <column name="description" type="text"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="003-create-room-types-table" author="antigravity">
+        <createTable tableName="room_types">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="hotel_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_room_types_hotel" references="hotels(id)"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="text"/>
+            <column name="capacity" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="base_price" type="decimal(10, 2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="004-create-rooms-table" author="antigravity">
+        <createTable tableName="rooms">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="room_type_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_rooms_room_type" references="room_types(id)"/>
+            </column>
+            <column name="room_number" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="005-create-reservations-table" author="antigravity">
+        <createTable tableName="reservations">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_reservations_user" references="users(id)"/>
+            </column>
+            <column name="check_in_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="check_out_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_late_checkout" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_price" type="decimal(10, 2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="006-create-reservation-rooms-table" author="antigravity">
+        <createTable tableName="reservation_rooms">
+            <column name="reservation_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_res_rooms_reservation" references="reservations(id)"/>
+            </column>
+            <column name="room_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_res_rooms_room" references="rooms(id)"/>
+            </column>
+            <column name="price_at_booking" type="decimal(10, 2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="reservation_rooms" columnNames="reservation_id, room_id" constraintName="pk_reservation_rooms"/>
+    </changeSet>
+
+</databaseChangeLog>

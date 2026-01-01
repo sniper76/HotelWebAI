@@ -1,0 +1,14 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <include file="db/changelog/changes/001-initial-schema.xml"/>
+    <include file="db/changelog/changes/002-add-language-column.xml"/>
+    <include file="db/changelog/changes/003-add-currency-columns.xml"/>
+    <include file="db/changelog/changes/004-add-common-columns.xml"/>
+    <include file="classpath:/db/changelog/changes/005-add-checkin-out-columns.xml"/>
+    <include file="classpath:/db/changelog/changes/006-fix-reservation-rooms-price.xml"/>
+    <include file="classpath:/db/changelog/changes/007-create-flight-management-tables.xml"/>
+
+</databaseChangeLog>

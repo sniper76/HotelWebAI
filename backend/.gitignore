@@ -1,0 +1,9 @@
+target/
+build/
+gradle/
+.mvn/
+.idea/
+.gradle/
+
+*.imi
+*.log
