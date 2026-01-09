@@ -12,7 +12,7 @@ import java.time.LocalTime;
 @Setter
 @NoArgsConstructor
 @Table(name = "flight_tickets")
-public class FlightTicket {
+public class FlightTicket extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

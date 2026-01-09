@@ -215,8 +215,8 @@ const HotelManagement = () => {
               value={newHotel.useYn}
               onChange={(e) => setNewHotel({ ...newHotel, useYn: e.target.value })}
             >
-              <option value="Y">Use: Y</option>
-              <option value="N">Use: N</option>
+              <option value="Y">Y</option>
+              <option value="N">N</option>
             </select>
             <button type="submit" className="btn btn-primary">
               {t("create")}
@@ -273,8 +273,8 @@ const HotelManagement = () => {
                   value={editHotelData.useYn}
                   onChange={(e) => setEditHotelData({ ...editHotelData, useYn: e.target.value })}
                 >
-                  <option value="Y">Use: Y</option>
-                  <option value="N">Use: N</option>
+                  <option value="Y">Y</option>
+                  <option value="N">N</option>
                 </select>
                 <div style={{ display: "flex", gap: "0.5rem" }}>
                   <button type="submit" className="btn btn-primary">
@@ -381,11 +381,11 @@ const HotelManagement = () => {
                         width: "90%",
                       }}
                     >
-                      Price (KRW)
+                      {t("priceKrw")}
                     </label>
                     <input
                       type="number"
-                      placeholder="Price (KRW)"
+                      placeholder={t("priceKrw")}
                       className="input"
                       style={{ width: "90%" }}
                       value={newRoomType.priceKrw}
@@ -406,11 +406,11 @@ const HotelManagement = () => {
                         width: "90%",
                       }}
                     >
-                      Price (USD)
+                      {t("priceUsd")}
                     </label>
                     <input
                       type="number"
-                      placeholder="Price (USD)"
+                      placeholder={t("priceUsd")}
                       className="input"
                       style={{ width: "90%" }}
                       value={newRoomType.priceUsd}
@@ -431,11 +431,11 @@ const HotelManagement = () => {
                         width: "90%",
                       }}
                     >
-                      Price (PHP)
+                      {t("pricePhp")}
                     </label>
                     <input
                       type="number"
-                      placeholder="Price (PHP)"
+                      placeholder={t("pricePhp")}
                       className="input"
                       style={{ width: "90%" }}
                       value={newRoomType.pricePhp}
@@ -453,8 +453,8 @@ const HotelManagement = () => {
                       value={newRoomType.useYn}
                       onChange={(e) => setNewRoomType({ ...newRoomType, useYn: e.target.value })}
                     >
-                      <option value="Y">Use: Y</option>
-                      <option value="N">Use: N</option>
+                      <option value="Y">Y</option>
+                      <option value="N">N</option>
                     </select>
                   </div>
                   <button type="submit" className="btn btn-primary">
@@ -522,7 +522,7 @@ const HotelManagement = () => {
                         >
                           <input
                             type="number"
-                            placeholder="Price (KRW)"
+                            placeholder={t("priceKrw")}
                             className="input"
                             value={editRoomTypeData.priceKrw}
                             onChange={(e) =>
@@ -535,7 +535,7 @@ const HotelManagement = () => {
                           />
                           <input
                             type="number"
-                            placeholder="Price (USD)"
+                            placeholder={t("priceUsd")}
                             className="input"
                             value={editRoomTypeData.priceUsd}
                             onChange={(e) =>
@@ -548,7 +548,7 @@ const HotelManagement = () => {
                           />
                           <input
                             type="number"
-                            placeholder="Price (PHP)"
+                            placeholder={t("pricePhp")}
                             className="input"
                             value={editRoomTypeData.pricePhp}
                             onChange={(e) =>

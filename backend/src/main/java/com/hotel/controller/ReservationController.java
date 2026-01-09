@@ -21,10 +21,10 @@ public class ReservationController {
 
     @GetMapping("/search")
     public ResponseEntity<List<ReservationDto.AvailableRoomResponse>> searchRooms(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) java.time.LocalDateTime checkInTime,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) java.time.LocalDateTime checkOutTime,
             @RequestParam Integer guestCount) {
-        return ResponseEntity.ok(reservationService.searchAvailableRooms(checkInDate, checkOutDate, guestCount));
+        return ResponseEntity.ok(reservationService.searchAvailableRooms(checkInTime, checkOutTime, guestCount));
     }
 
     @PostMapping

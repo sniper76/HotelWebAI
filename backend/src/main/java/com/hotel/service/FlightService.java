@@ -49,13 +49,13 @@ public class FlightService {
     }
 
     public List<FlightDto.FlightTicketResponse> getAllFlightTickets() {
-        return flightTicketRepository.findAll().stream()
+        return flightTicketRepository.findAllByUseYn("Y").stream()
                 .map(this::mapToFlightTicketResponse)
                 .collect(Collectors.toList());
     }
 
     public List<FlightDto.FlightTicketResponse> getFlightTicketsByAirline(Long airlineId) {
-        return flightTicketRepository.findByAirlineId(airlineId).stream()
+        return flightTicketRepository.findByAirlineIdAndUseYn(airlineId, "Y").stream()
                 .map(this::mapToFlightTicketResponse)
                 .collect(Collectors.toList());
     }
@@ -71,6 +71,7 @@ public class FlightService {
         ticket.setDepartureTime(request.getDepartureTime());
         ticket.setArrivalAirport(request.getArrivalAirport());
         ticket.setArrivalTime(request.getArrivalTime());
+        ticket.setUseYn(request.getUseYn());
 
         FlightTicket saved = flightTicketRepository.save(ticket);
         return mapToFlightTicketResponse(saved);
@@ -88,8 +89,10 @@ public class FlightService {
         ticket.setDepartureTime(request.getDepartureTime());
         ticket.setArrivalAirport(request.getArrivalAirport());
         ticket.setArrivalTime(request.getArrivalTime());
+        ticket.setUseYn(request.getUseYn());
 
-        return mapToFlightTicketResponse(ticket);
+        FlightTicket saved = flightTicketRepository.save(ticket);
+        return mapToFlightTicketResponse(saved);
     }
 
     @Transactional

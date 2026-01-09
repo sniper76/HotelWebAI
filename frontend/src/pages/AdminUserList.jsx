@@ -32,13 +32,13 @@ const AdminUserList = () => {
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                     <thead>
                         <tr style={{ textAlign: 'left', borderBottom: '1px solid var(--border)' }}>
-                            <th style={{ padding: '0.5rem' }}>ID</th>
+                            <th style={{ padding: '0.5rem' }}>{t("id")}</th>
                             <th style={{ padding: '0.5rem' }}>{t("username")}</th>
                             <th style={{ padding: '0.5rem' }}>{t("fullName")}</th>
-                            <th style={{ padding: '0.5rem' }}>Email</th>
-                            <th style={{ padding: '0.5rem' }}>Role</th>
-                            <th style={{ padding: '0.5rem' }}>Use Y/N</th>
-                            <th style={{ padding: '0.5rem' }}>Actions</th>
+                            <th style={{ padding: '0.5rem' }}>{t("email")}</th>
+                            <th style={{ padding: '0.5rem' }}>{t("role")}</th>
+                            <th style={{ padding: '0.5rem' }}>{t("useYn")}</th>
+                            <th style={{ padding: '0.5rem' }}>{t("actions")}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,7 +51,7 @@ const AdminUserList = () => {
                                 <td style={{ padding: '0.5rem' }}>{user.role}</td>
                                 <td style={{ padding: '0.5rem' }}>{user.useYn}</td>
                                 <td style={{ padding: '0.5rem' }}>
-                                    <button 
+                                    <button
                                         className="btn btn-primary btn-sm"
                                         onClick={() => handleEdit(user.id)}
                                     >

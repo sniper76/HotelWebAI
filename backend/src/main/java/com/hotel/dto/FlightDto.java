@@ -9,6 +9,7 @@ public class FlightDto {
     public static class AirlineRequest {
         private String name;
         private String code;
+        private String useYn;
     }
 
     @Data
@@ -16,6 +17,7 @@ public class FlightDto {
         private Long id;
         private String name;
         private String code;
+        private String useYn;
 
         public AirlineResponse(Long id, String name, String code) {
             this.id = id;
@@ -31,6 +33,7 @@ public class FlightDto {
         private LocalTime departureTime;
         private String arrivalAirport;
         private LocalTime arrivalTime;
+        private String useYn;
     }
 
     @Data
@@ -42,6 +45,7 @@ public class FlightDto {
         private LocalTime departureTime;
         private String arrivalAirport;
         private LocalTime arrivalTime;
+        private String useYn;
 
         public FlightTicketResponse(Long id, Long airlineId, String airlineName, String departureAirport,
                 LocalTime departureTime, String arrivalAirport, LocalTime arrivalTime) {

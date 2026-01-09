@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
 import axios from "../api/axiosConfig";
-import { useAuth } from "../context/AuthContext"; // Assuming context exists
+import { useAuth } from "../context/AuthContext";
+import { useTranslation } from "react-i18next";
 
 const CheckInManager = () => {
   const [hotels, setHotels] = useState([]);
   const [selectedHotelId, setSelectedHotelId] = useState("");
   const [reservations, setReservations] = useState([]);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
-  const { user } = useAuth(); // Assuming this gives user info
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchHotels();
@@ -23,14 +25,14 @@ const CheckInManager = () => {
 
   const fetchHotels = async () => {
     try {
-      const response = await axios.get("/owner/hotels"); // This returns My Hotels (or all if admin per my service change)
+      const response = await axios.get("/owner/hotels");
       setHotels(response.data);
       if (response.data.length > 0) {
         setSelectedHotelId(response.data[0].id);
       }
     } catch (error) {
       console.error("Error fetching hotels:", error);
-      setMessage("호텔 목록을 불러오는데 실패했습니다.");
+      setMessage(t("failFetchHotels"));
     }
   };
 
@@ -46,7 +48,7 @@ const CheckInManager = () => {
       setReservations(response.data);
     } catch (error) {
       console.error("Error fetching reservations:", error);
-      setMessage("예약 목록을 불러오는데 실패했습니다.");
+      setMessage(t("failFetchReservations"));
     } finally {
       setLoading(false);
     }
@@ -55,42 +57,42 @@ const CheckInManager = () => {
   const handleCheckIn = async (id) => {
     try {
       await axios.put(`/reservations/${id}/check-in`);
-      setMessage("체크인 처리되었습니다.");
+      setMessage(t("checkInSuccess"));
       fetchReservations();
     } catch (error) {
       console.error("Check-in failed:", error);
-      setMessage("체크인 처리에 실패했습니다.");
+      setMessage(t("checkInFail"));
     }
   };
 
   const handleCheckOut = async (reservation) => {
     if (
       window.confirm(
-        `${reservation.totalPrice} ${reservation.currency} 정산하시겠습니까?`
+        `${reservation.totalPrice} ${reservation.currency} ${t("confirmSettlement")}`
       )
     ) {
       try {
         await axios.put(`/reservations/${reservation.id}/check-out`);
         alert(
-          `체크아웃 완료. 정산 금액: ${reservation.totalPrice} ${reservation.currency}`
+          `${t("checkOutSuccess")} ${t("totalSettlement")}: ${reservation.totalPrice} ${reservation.currency}`
         );
-        setMessage("체크아웃 처리되었습니다.");
+        setMessage(t("checkOutSuccess"));
         fetchReservations();
       } catch (error) {
         console.error("Check-out failed:", error);
-        setMessage("체크아웃 처리에 실패했습니다.");
+        setMessage(t("checkOutFail"));
       }
     }
   };
 
   return (
     <div className="container mt-4">
-      <h2>입실 관리</h2>
+      <h2>{t("checkInManagement")}</h2>
       {message && <div className="alert alert-info">{message}</div>}
 
       <div className="row mb-4">
         <div className="col-md-6">
-          <label>호텔 선택</label>
+          <label>{t("selectHotel")}</label>
           <select
             className="form-control"
             value={selectedHotelId}
@@ -104,7 +106,7 @@ const CheckInManager = () => {
           </select>
         </div>
         <div className="col-md-6">
-          <label>날짜 선택</label>
+          <label>{t("selectDate")}</label>
           <input
             type="date"
             className="form-control"
@@ -115,7 +117,7 @@ const CheckInManager = () => {
       </div>
 
       {loading ? (
-        <p>Loading...</p>
+        <p>{t("loading")}</p>
       ) : (
         <div className="container" style={{ marginTop: "2rem" }}>
           <div className="card">
@@ -127,13 +129,13 @@ const CheckInManager = () => {
                     borderBottom: "1px solid var(--border)",
                   }}
                 >
-                  <th style={{ padding: "0.5rem" }}>ID</th>
-                  <th style={{ padding: "0.5rem" }}>객실</th>
-                  <th style={{ padding: "0.5rem" }}>체크인 날짜</th>
-                  <th style={{ padding: "0.5rem" }}>체크아웃 날짜</th>
-                  <th style={{ padding: "0.5rem" }}>상태</th>
-                  <th style={{ padding: "0.5rem" }}>금액</th>
-                  <th style={{ padding: "0.5rem" }}>액션</th>
+                  <th style={{ padding: "0.5rem" }}>{t("id")}</th>
+                  <th style={{ padding: "0.5rem" }}>{t("room")}</th>
+                  <th style={{ padding: "0.5rem" }}>{t("checkInDate")}</th>
+                  <th style={{ padding: "0.5rem" }}>{t("checkOutDate")}</th>
+                  <th style={{ padding: "0.5rem" }}>{t("status")}</th>
+                  <th style={{ padding: "0.5rem" }}>{t("amount")}</th>
+                  <th style={{ padding: "0.5rem" }}>{t("actions")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -155,19 +157,19 @@ const CheckInManager = () => {
                     <td style={{ padding: "0.5rem" }}>
                       {(res.status === "PENDING" ||
                         res.status === "CONFIRMED") && (
-                        <button
-                          className="btn btn-success btn-sm"
-                          onClick={() => handleCheckIn(res.id)}
-                        >
-                          체크인
-                        </button>
-                      )}
+                          <button
+                            className="btn btn-success btn-sm"
+                            onClick={() => handleCheckIn(res.id)}
+                          >
+                            {t("checkIn")}
+                          </button>
+                        )}
                       {res.status === "CHECKED_IN" && (
                         <button
                           className="btn btn-warning btn-sm"
                           onClick={() => handleCheckOut(res)}
                         >
-                          체크아웃/정산
+                          {t("checkOutSettlement")}
                         </button>
                       )}
                     </td>
@@ -176,7 +178,7 @@ const CheckInManager = () => {
                 {reservations.length === 0 && (
                   <tr>
                     <td colSpan="7" className="text-center">
-                      예약 내역이 없습니다.
+                      {t("noReservations")}
                     </td>
                   </tr>
                 )}

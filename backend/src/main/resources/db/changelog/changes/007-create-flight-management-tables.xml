@@ -45,4 +45,28 @@
                                  referencedTableName="airlines"/>
     </changeSet>
 
+    <changeSet id="007-add-common-columns-airline" author="antigravity">
+        <addColumn tableName="airlines">
+            <column name="use_yn" type="VARCHAR(1)" defaultValue="Y">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_by" type="VARCHAR(255)"/>
+            <column name="updated_at" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="007-add-common-columns-flight-ticket" author="antigravity">
+        <addColumn tableName="flight_tickets">
+            <column name="use_yn" type="VARCHAR(1)" defaultValue="Y">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_by" type="VARCHAR(255)"/>
+            <column name="updated_at" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

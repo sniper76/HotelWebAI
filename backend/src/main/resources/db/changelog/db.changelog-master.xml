@@ -10,5 +10,6 @@
     <include file="classpath:/db/changelog/changes/005-add-checkin-out-columns.xml"/>
     <include file="classpath:/db/changelog/changes/006-fix-reservation-rooms-price.xml"/>
     <include file="classpath:/db/changelog/changes/007-create-flight-management-tables.xml"/>
+    <include file="classpath:/db/changelog/changes/008-migrate-reservation-dates-to-times.xml"/>
 
 </databaseChangeLog>

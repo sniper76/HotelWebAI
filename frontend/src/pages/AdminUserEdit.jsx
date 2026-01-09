@@ -59,7 +59,7 @@ const AdminUserEdit = () => {
                         />
                     </div>
                     <div>
-                        <label>Email</label>
+                        <label>{t("email")}</label>
                         <input
                             className="input"
                             value={user.email || ''}
@@ -67,7 +67,7 @@ const AdminUserEdit = () => {
                         />
                     </div>
                     <div>
-                        <label>Role</label>
+                        <label>{t("role")}</label>
                         <select
                             className="input"
                             value={user.role}
@@ -79,7 +79,7 @@ const AdminUserEdit = () => {
                         </select>
                     </div>
                     <div>
-                        <label>Use Y/N</label>
+                        <label>{t("useYn")}</label>
                         <select
                             className="input"
                             value={user.useYn}

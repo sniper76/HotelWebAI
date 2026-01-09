@@ -27,10 +27,10 @@ public class Reservation extends BaseEntity {
     private User user;
 
     @Column(nullable = false)
-    private LocalDate checkInDate;
+    private LocalDateTime checkInTime;
 
     @Column(nullable = false)
-    private LocalDate checkOutDate;
+    private LocalDateTime checkOutTime;
 
     @Column(nullable = false)
     private boolean isLateCheckout;

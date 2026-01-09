@@ -6,17 +6,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
        List<Reservation> findByUserId(Long userId);
 
        @Query("SELECT r FROM Reservation r JOIN r.rooms rm WHERE rm.id = :roomId AND " +
-                     "((r.checkInDate < :checkOutDate AND r.checkOutDate > :checkInDate)) AND " +
+                     "((r.checkInTime < :checkOutTime AND r.checkOutTime > :checkInTime)) AND " +
                      "r.status <> 'CANCELLED'")
        List<Reservation> findConflictingReservations(@Param("roomId") Long roomId,
-                     @Param("checkInDate") LocalDate checkInDate,
-                     @Param("checkOutDate") LocalDate checkOutDate);
+                     @Param("checkInTime") java.time.LocalDateTime checkInTime,
+                     @Param("checkOutTime") java.time.LocalDateTime checkOutTime);
 
        @Query("SELECT DISTINCT r FROM Reservation r JOIN r.rooms rm WHERE rm.roomType.hotel.id = :hotelId AND " +
                      "r.status = 'CHECKED_OUT' AND r.actualCheckOutTime BETWEEN :start AND :end")
@@ -25,13 +26,14 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
                      @Param("end") java.time.LocalDateTime end);
 
        @Query("""
-              SELECT DISTINCT r FROM Reservation r JOIN r.rooms rm 
-              WHERE rm.roomType.hotel.id = :hotelId 
-              AND (
-                     r.checkInDate >= :date 
-                     OR r.checkOutDate <= :date
-              )
-       """)
+                            SELECT DISTINCT r FROM Reservation r JOIN r.rooms rm
+                            WHERE rm.roomType.hotel.id = :hotelId
+                            AND (
+                                   r.checkInTime >= :start
+                                   OR r.checkOutTime <= :end
+                            )
+                     """)
        List<Reservation> findManagerReservations(@Param("hotelId") Long hotelId,
-                     @Param("date") LocalDate date);
+                     @Param("start") java.time.LocalDateTime start,
+                     @Param("end") java.time.LocalDateTime end);
 }

@@ -151,8 +151,8 @@ public class ReservationIntegrationTest {
                 ReservationDto.CreateReservationRequest reservationRequest = ReservationDto.CreateReservationRequest
                                 .builder()
                                 .roomIds(List.of(roomA101.getId()))
-                                .checkInDate(LocalDate.now())
-                                .checkOutDate(LocalDate.now().plusDays(2)) // 2 Nights
+                                .checkInTime(LocalDate.now().atTime(13, 0))
+                                .checkOutTime(LocalDate.now().plusDays(2).atTime(11, 0)) // 2 Nights
                                 .isLateCheckout(false)
                                 .currency("USD")
                                 .build();
@@ -227,8 +227,8 @@ public class ReservationIntegrationTest {
                 // Setup a checked-out reservation for Hotel A
                 ReservationDto.CreateReservationRequest req = ReservationDto.CreateReservationRequest.builder()
                                 .roomIds(List.of(roomA101.getId()))
-                                .checkInDate(LocalDate.now())
-                                .checkOutDate(LocalDate.now().plusDays(1))
+                                .checkInTime(LocalDate.now().atTime(13, 0))
+                                .checkOutTime(LocalDate.now().plusDays(1).atTime(11, 0))
                                 .build();
 
                 // Make reservation, checkin, checkout directly via repo/service to save time in

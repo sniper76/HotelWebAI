@@ -33,7 +33,8 @@ public class ReservationService {
     private final HotelRepository hotelRepository;
 
     @Transactional(readOnly = true)
-    public List<ReservationDto.AvailableRoomResponse> searchAvailableRooms(LocalDate checkIn, LocalDate checkOut,
+    public List<ReservationDto.AvailableRoomResponse> searchAvailableRooms(java.time.LocalDateTime checkIn,
+            java.time.LocalDateTime checkOut,
             Integer guests) {
         List<Room> allRooms = roomRepository.findAll();
         List<ReservationDto.AvailableRoomResponse> availableRooms = new ArrayList<>();
@@ -54,14 +55,6 @@ public class ReservationService {
                         .build());
             }
         }
-
-        // Filter by guests?
-        // The requirement says "If one room is not enough, use multiple".
-        // So we should return ALL available rooms, and let the user/frontend pick
-        // combinations.
-        // But maybe we can filter out rooms that are way too small if used alone?
-        // No, let's return all available rooms.
-
         return availableRooms;
     }
 
@@ -75,24 +68,25 @@ public class ReservationService {
 
         // Validate availability for ALL rooms
         for (HotelRoomDto room : rooms) {
-            if (!isRoomAvailable(room.getRoom().getId(), request.getCheckInDate(), request.getCheckOutDate(),
+            if (!isRoomAvailable(room.getRoom().getId(), request.getCheckInTime(), request.getCheckOutTime(),
                     request.isLateCheckout())) {
                 throw new RuntimeException(
                         "Room " + room.getRoom().getRoomNumber() + " is not available for the selected dates.");
             }
         }
 
-        Map<Long, List<HotelRoomDto>> roomsByHotelId =
-                rooms.stream()
-                        .collect(Collectors.groupingBy(
-                                dto -> dto.getHotel().getId()
-                        ));
+        Map<Long, List<HotelRoomDto>> roomsByHotelId = rooms.stream()
+                .collect(Collectors.groupingBy(
+                        dto -> dto.getHotel().getId()));
 
         AtomicReference<Long> firstSavedId = new AtomicReference<>(0l);
         roomsByHotelId.forEach((hotelId, roomList) -> {
-            // Calculate total price
+            // Calculate total price based on NIGHTS (Dates)
             BigDecimal totalPrice = BigDecimal.ZERO;
-            long nights = java.time.temporal.ChronoUnit.DAYS.between(request.getCheckInDate(), request.getCheckOutDate());
+            long nights = java.time.temporal.ChronoUnit.DAYS.between(
+                    request.getCheckInTime().toLocalDate(),
+                    request.getCheckOutTime().toLocalDate());
+
             if (nights < 1)
                 nights = 1; // Minimum 1 night
 
@@ -108,7 +102,6 @@ public class ReservationService {
                 }
 
                 if (pricePerNight == null) {
-                    // Fallback if specific currency price is missing
                     pricePerNight = room.getRoom().getRoomType().getBasePrice();
                 }
 
@@ -116,12 +109,10 @@ public class ReservationService {
                 totalPrice = totalPrice.add(roomPrice);
             }
 
-            // Late checkout is free as per requirement ("무료로 기본 체크아웃 시간에서 5시간 더 투숙")
-
             Reservation reservation = Reservation.builder()
                     .user(user)
-                    .checkInDate(request.getCheckInDate())
-                    .checkOutDate(request.getCheckOutDate())
+                    .checkInTime(request.getCheckInTime())
+                    .checkOutTime(request.getCheckOutTime())
                     .isLateCheckout(request.isLateCheckout())
                     .status(Reservation.ReservationStatus.PENDING)
                     .totalPrice(totalPrice)
@@ -135,8 +126,7 @@ public class ReservationService {
 
         return mapToReservationResponse(
                 reservationRepository.findById(firstSavedId.get())
-                        .orElseThrow()
-        );
+                        .orElseThrow());
     }
 
     @Transactional(readOnly = true)
@@ -147,79 +137,12 @@ public class ReservationService {
                 .collect(Collectors.toList());
     }
 
-    private boolean isRoomAvailable(Long roomId, LocalDate checkIn, LocalDate checkOut, boolean isLateCheckout) {
-        // 1. Check strict date overlap
+    private boolean isRoomAvailable(Long roomId, java.time.LocalDateTime checkIn, java.time.LocalDateTime checkOut,
+            boolean isLateCheckout) {
+        // 1. Check strict overlap with LocalDateTime
         List<Reservation> conflicts = reservationRepository.findConflictingReservations(roomId, checkIn, checkOut);
         if (!conflicts.isEmpty())
             return false;
-
-        // 2. Check Late Checkout conflicts
-        // Case A: Existing reservation ends on 'checkIn' date, but has Late Checkout.
-        // We need to find reservations where checkOutDate == checkIn
-        // Since findConflictingReservations uses (r.checkIn < checkOut AND r.checkOut >
-        // checkIn),
-        // it covers strict overlaps.
-        // We need to check the boundary conditions manually or add to query.
-
-        // Let's do it in Java for simplicity or add specific queries.
-        // Actually, let's fetch reservations touching the boundaries.
-
-        // Check if there is a reservation ending on 'checkIn' with late checkout
-        // This would block our entry at 13:00.
-        // Query: checkOutDate == checkIn AND isLateCheckout = true
-        // We can't easily do this with the previous query.
-
-        // Let's fetch all reservations for the room that overlap [checkIn - 1 day,
-        // checkOut + 1 day] to be safe?
-        // Or just trust the repository to be smart?
-        // Let's add a specific check.
-
-        // Note: The previous query `((r.checkInDate < :checkOutDate AND r.checkOutDate
-        // > :checkInDate))`
-        // covers:
-        // [In, Out) vs [QIn, QOut)
-        // If Out == QIn, not selected. (Standard)
-        // If In == QOut, not selected. (Standard)
-
-        // We need to check:
-        // 1. Existing ends on QIn AND Existing.isLateCheckout -> Conflict.
-        // 2. Existing starts on QOut AND New.isLateCheckout -> Conflict.
-
-        // Let's assume we can add these checks.
-        // Since I can't easily change the repo method signature right now without
-        // re-writing,
-        // I'll assume the `findConflictingReservations` handles the main bulk, and I'll
-        // add boundary checks here if I can fetch them.
-        // But fetching all is inefficient.
-
-        // Better: Update the query in Repository?
-        // Or just implement a robust query in Repository.
-
-        // Let's stick to the current query for strict overlap, and maybe ignore the
-        // edge case for this MVP
-        // OR, better, update the Repo query to include the edge cases.
-        // But `isLateCheckout` is a parameter for the NEW reservation. The query
-        // doesn't know it.
-
-        // So:
-        // 1. Strict overlap (already done).
-        // 2. Check for "Previous reservation ends on checkIn with LateCheckout".
-        // 3. If `isLateCheckout` is true, check for "Next reservation starts on
-        // checkOut".
-
-        // I will rely on the strict overlap for now.
-        // To properly support the requirement "Late checkout blocks next check-in",
-        // I really should check
-        // `reservationRepository.existsByRoomIdAndCheckOutDateAndIsLateCheckoutTrue(roomId,
-        // checkIn)`.
-        // And if `isLateCheckout` is true,
-        // `reservationRepository.existsByRoomIdAndCheckInDate(roomId, checkOut)`.
-
-        // I'll add these methods to Repo later if needed, or just use a custom query in
-        // Service if I had EntityManager.
-        // For this task, I'll stick to the strict overlap which is 90% correct,
-        // and maybe add a TODO or simple check if I can.
-
         return true;
     }
 
@@ -280,7 +203,12 @@ public class ReservationService {
 
         if (date == null)
             date = LocalDate.now();
-        List<Reservation> reservations = reservationRepository.findManagerReservations(hotelId, date);
+
+        // Query for the whole day
+        java.time.LocalDateTime start = date.atStartOfDay();
+        java.time.LocalDateTime end = date.atTime(23, 59, 59);
+
+        List<Reservation> reservations = reservationRepository.findManagerReservations(hotelId, start, end);
         return reservations.stream()
                 .map(this::mapToReservationResponse)
                 .collect(Collectors.toList());
@@ -310,8 +238,8 @@ public class ReservationService {
     private ReservationDto.ReservationResponse mapToReservationResponse(Reservation reservation) {
         return ReservationDto.ReservationResponse.builder()
                 .id(reservation.getId())
-                .checkInDate(reservation.getCheckInDate())
-                .checkOutDate(reservation.getCheckOutDate())
+                .checkInTime(reservation.getCheckInTime())
+                .checkOutTime(reservation.getCheckOutTime())
                 .isLateCheckout(reservation.isLateCheckout())
                 .status(reservation.getStatus().name())
                 .totalPrice(reservation.getTotalPrice())

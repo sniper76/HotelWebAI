@@ -1,0 +1,40 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet id="1" author="jake">
+        <addColumn tableName="reservations">
+            <column name="check_in_time" type="TIMESTAMP"/>
+            <column name="check_out_time" type="TIMESTAMP"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="2" author="jake">
+        <!-- Migrate valid data (PostgreSQL syntax) -->
+        <sql dbms="postgresql">
+            UPDATE reservations 
+            SET check_in_time = check_in_date + interval '13 hours',
+                check_out_time = check_out_date + interval '11 hours'
+            WHERE check_in_date IS NOT NULL AND check_out_date IS NOT NULL;
+        </sql>
+        <!-- H2 fallback for tests -->
+        <sql dbms="h2">
+            UPDATE reservations 
+            SET check_in_time = DATEADD('HOUR', 13, check_in_date),
+                check_out_time = DATEADD('HOUR', 11, check_out_date)
+            WHERE check_in_date IS NOT NULL AND check_out_date IS NOT NULL;
+        </sql>
+    </changeSet>
+
+    <changeSet id="3" author="jake">
+        <addNotNullConstraint tableName="reservations" columnName="check_in_time" columnDataType="TIMESTAMP"/>
+        <addNotNullConstraint tableName="reservations" columnName="check_out_time" columnDataType="TIMESTAMP"/>
+    </changeSet>
+
+    <changeSet id="4" author="jake">
+        <dropColumn tableName="reservations" columnName="check_in_date"/>
+        <dropColumn tableName="reservations" columnName="check_out_date"/>
+    </changeSet>
+
+</databaseChangeLog>

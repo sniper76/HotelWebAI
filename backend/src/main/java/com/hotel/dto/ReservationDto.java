@@ -16,8 +16,8 @@ public class ReservationDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class SearchRequest {
-        private LocalDate checkInDate;
-        private LocalDate checkOutDate;
+        private java.time.LocalDateTime checkInTime;
+        private java.time.LocalDateTime checkOutTime;
         private Integer guestCount;
     }
 
@@ -27,8 +27,8 @@ public class ReservationDto {
     @AllArgsConstructor
     public static class CreateReservationRequest {
         private List<Long> roomIds;
-        private LocalDate checkInDate;
-        private LocalDate checkOutDate;
+        private java.time.LocalDateTime checkInTime;
+        private java.time.LocalDateTime checkOutTime;
         private boolean isLateCheckout;
         private String currency; // KRW, USD, PHP
     }
@@ -39,8 +39,8 @@ public class ReservationDto {
     @AllArgsConstructor
     public static class ReservationResponse {
         private Long id;
-        private LocalDate checkInDate;
-        private LocalDate checkOutDate;
+        private java.time.LocalDateTime checkInTime;
+        private java.time.LocalDateTime checkOutTime;
         private boolean isLateCheckout;
         private String status;
         private BigDecimal totalPrice;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "../api/axiosConfig";
 import { useAuth } from "../context/AuthContext";
+import { useTranslation } from "react-i18next";
 
 const SettlementReport = () => {
   const [hotels, setHotels] = useState([]);
@@ -9,6 +10,7 @@ const SettlementReport = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [loaded, setLoaded] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     fetchHotels();
@@ -101,10 +103,10 @@ const SettlementReport = () => {
 
   return (
     <div className="container mt-4">
-      <h2>정산 내역 (Settlement Report)</h2>
+      <h2>{t("settlementReport")}</h2>
       <div className="row mb-3">
         <div className="col-md-4">
-          <label>호텔</label>
+          <label>{t("selectHotel")}</label>
           <select
             className="form-control"
             value={selectedHotelId}
@@ -118,7 +120,7 @@ const SettlementReport = () => {
           </select>
         </div>
         <div className="col-md-3">
-          <label>시작일</label>
+          <label>{t("startDate")}</label>
           <input
             type="date"
             className="form-control"
@@ -127,7 +129,7 @@ const SettlementReport = () => {
           />
         </div>
         <div className="col-md-3">
-          <label>종료일</label>
+          <label>{t("endDate")}</label>
           <input
             type="date"
             className="form-control"
@@ -140,16 +142,16 @@ const SettlementReport = () => {
             className="btn btn-outline-secondary me-2"
             onClick={setThisWeek}
           >
-            이번 주
+            {t("thisWeek")}
           </button>
           <button className="btn btn-outline-secondary" onClick={setThisMonth}>
-            이번 달
+            {t("thisMonth")}
           </button>
           <button className="btn btn-outline-secondary" onClick={setBefore30Days}>
-            현재일 -30일
+            {t("last30Days")}
           </button>
           <button className="btn btn-primary w-100" onClick={fetchSettlement}>
-            조회
+            {t("search")}
           </button>
         </div>
       </div>
@@ -158,13 +160,13 @@ const SettlementReport = () => {
         <>
           <div className="card mb-3">
             <div className="card-body">
-              <h5 className="card-title">기간 총 정산금액</h5>
+              <h5 className="card-title">{t("totalSettlement")}</h5>
               {Object.entries(totals).map(([curr, amt]) => (
                 <p key={curr} className="card-text fw-bold">
                   {amt.toLocaleString()} {curr}
                 </p>
               ))}
-              {Object.keys(totals).length === 0 && <p>정산 내역이 없습니다.</p>}
+              {Object.keys(totals).length === 0 && <p>{t("noReservations")}</p>}
             </div>
           </div>
 
@@ -176,10 +178,10 @@ const SettlementReport = () => {
                   borderBottom: "1px solid var(--border)",
                 }}
               >
-                <th style={{ padding: "0.5rem" }}>체크아웃 일시</th>
-                <th style={{ padding: "0.5rem" }}>객실</th>
-                <th style={{ padding: "0.5rem" }}>결제 금액</th>
-                <th style={{ padding: "0.5rem" }}>통화</th>
+                <th style={{ padding: "0.5rem" }}>{t("checkoutTime")}</th>
+                <th style={{ padding: "0.5rem" }}>{t("room")}</th>
+                <th style={{ padding: "0.5rem" }}>{t("paymentAmount")}</th>
+                <th style={{ padding: "0.5rem" }}>{t("currency")}</th>
               </tr>
             </thead>
             <tbody>

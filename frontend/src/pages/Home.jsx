@@ -5,10 +5,24 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 const Home = () => {
-  const [searchParams, setSearchParams] = useState({
-    checkInDate: "",
-    checkOutDate: "",
-    guestCount: 1,
+  const [searchParams, setSearchParams] = useState(() => {
+    const today = new Date();
+    today.setHours(13, 0, 0, 0); // 13:00 today
+
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(11, 0, 0, 0); // 11:00 tomorrow
+
+    const toLocalISO = (d) => {
+      const offset = d.getTimezoneOffset() * 60000;
+      return new Date(d.getTime() - offset).toISOString().slice(0, 16);
+    };
+
+    return {
+      checkInTime: toLocalISO(today),
+      checkOutTime: toLocalISO(tomorrow),
+      guestCount: 1,
+    };
   });
   const [availableRooms, setAvailableRooms] = useState([]);
   const [selectedRooms, setSelectedRooms] = useState([]);
@@ -22,6 +36,11 @@ const Home = () => {
   const [flights, setFlights] = useState([]); // Flights for selected airline
   const [selectedAirlineId, setSelectedAirlineId] = useState("");
   const [selectedFlightId, setSelectedFlightId] = useState("");
+
+  const toLocalISO = (d) => {
+    const offset = d.getTimezoneOffset() * 60000;
+    return new Date(d.getTime() - offset).toISOString().slice(0, 16);
+  };
 
   useEffect(() => {
     fetchAirlines();
@@ -60,17 +79,24 @@ const Home = () => {
       if (flight) {
         // Set Check-in Date to Current Date (Today)
         const today = new Date();
-        const checkInStr = today.toISOString().split('T')[0];
+        // Keep selected flight time? Or User Requirement says "Check-in at 1:00 PM"?
+        // Actually, if flight arrival is X, maybe check-in should handle it?
+        // But requested is "Standard criteria ... Checkin 13:00".
+        // Flight selection logic "Auto-fills Dates".
+        // Let's keep 13:00/11:00 default but on Flight Arrival Date?
+        // Let's stick to Today/Tomorrow pattern for now, but respect 13:00/11:00.
 
-        // Set Check-out Date to Today + 1 Day
-        const checkOutDate = new Date(today);
-        checkOutDate.setDate(checkOutDate.getDate() + 1);
-        const checkOutStr = checkOutDate.toISOString().split('T')[0];
+        // console.log('flight', flight.departureTime);
+        const arrivalTime = flight.arrivalTime.split(':');
+        today.setHours(arrivalTime[0], arrivalTime[1], 0, 0);
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(tomorrow.getHours() - 1, arrivalTime[1], 0, 0);
 
         setSearchParams(prev => ({
           ...prev,
-          checkInDate: checkInStr,
-          checkOutDate: checkOutStr
+          checkInTime: toLocalISO(today),
+          checkOutTime: toLocalISO(tomorrow)
         }));
       }
     }
@@ -87,9 +113,9 @@ const Home = () => {
   };
 
   const handleSearch = async (e) => {
-    // ... same logic
     e.preventDefault();
     try {
+      console.log('searchParams', searchParams);
       const response = await api.get("/reservations/search", {
         params: searchParams,
       });
@@ -97,12 +123,11 @@ const Home = () => {
       setSelectedRooms([]);
     } catch (error) {
       console.error("Search failed", error);
-      alert("Search failed");
+      alert(t("searchFailed"));
     }
   };
 
   const toggleRoomSelection = (roomId, hotelId) => {
-    // ... same logic
     setSelectedRooms((prev) =>
       prev.includes(roomId)
         ? prev.filter((id) => id !== roomId)
@@ -123,8 +148,8 @@ const Home = () => {
     try {
       await api.post("/reservations", {
         roomIds: selectedRooms,
-        checkInDate: searchParams.checkInDate,
-        checkOutDate: searchParams.checkOutDate,
+        checkInTime: searchParams.checkInTime, // Updated param name
+        checkOutTime: searchParams.checkOutTime, // Updated param name
         isLateCheckout,
         currency,
       });
@@ -156,7 +181,7 @@ const Home = () => {
           <div style={{ gridColumn: "1 / -1", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
             <div>
               <label style={{ display: "block", marginBottom: "0.5rem", color: "var(--text-muted)" }}>
-                Select Airline (Optional)
+                {t("selectAirlineOptional")}
               </label>
               <select
                 className="input"
@@ -164,7 +189,7 @@ const Home = () => {
                 onChange={handleAirlineChange}
                 style={{ width: "100%" }}
               >
-                <option value="">-- Choose Airline --</option>
+                <option value="">{t("chooseAirline")}</option>
                 {airlines.map(a => (
                   <option key={a.id} value={a.id}>{a.name}</option>
                 ))}
@@ -172,7 +197,7 @@ const Home = () => {
             </div>
             <div>
               <label style={{ display: "block", marginBottom: "0.5rem", color: "var(--text-muted)" }}>
-                Select Flight (Auto-fills Dates)
+                {t("selectFlightAuto")}
               </label>
               <select
                 className="input"
@@ -181,7 +206,7 @@ const Home = () => {
                 style={{ width: "100%" }}
                 disabled={!selectedAirlineId}
               >
-                <option value="">-- Choose Flight --</option>
+                <option value="">{t("chooseFlight")}</option>
                 {flights.map(f => (
                   <option key={f.id} value={f.id}>
                     {f.departureAirport} ({f.departureTime})
@@ -192,87 +217,89 @@ const Home = () => {
             </div>
           </div>
 
-          <div>
-            <label
-              style={{
-                display: "block",
-                marginBottom: "0.5rem",
-                color: "var(--text-muted)",
-              }}
-            >
-              {t("checkIn")}
-            </label>
-            <input
-              type="date"
-              className="input"
-              value={searchParams.checkInDate}
-              style={{ width: "92%" }}
-              onChange={(e) =>
-                setSearchParams({
-                  ...searchParams,
-                  checkInDate: e.target.value,
-                })
-              }
-              required
-            />
-          </div>
-          <div>
-            <label
-              style={{
-                display: "block",
-                marginBottom: "0.5rem",
-                color: "var(--text-muted)",
-              }}
-            >
-              {t("checkOut")}
-            </label>
-            <input
-              type="date"
-              className="input"
-              value={searchParams.checkOutDate}
-              style={{ width: "92%" }}
-              onChange={(e) =>
-                setSearchParams({
-                  ...searchParams,
-                  checkOutDate: e.target.value,
-                })
-              }
-              required
-            />
-          </div>
-          <div>
-            <label
-              style={{
-                display: "block",
-                marginBottom: "0.5rem",
-                color: "var(--text-muted)",
-              }}
-            >
-              {t("guests")}
-            </label>
-            <input
-              type="number"
-              min="1"
-              className="input"
-              value={searchParams.guestCount}
-              style={{ width: "92%" }}
-              onChange={(e) =>
-                setSearchParams({
-                  ...searchParams,
-                  guestCount: parseInt(e.target.value),
-                })
-              }
-              required
-            />
-          </div>
-          <div style={{ marginTop: "1.8rem" }}>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              style={{ width: "100%" }}
-            >
-              {t("searchAvailability")}
-            </button>
+          <div style={{ gridColumn: "1 / -1", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "1rem" }}>
+            <div>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "0.5rem",
+                  color: "var(--text-muted)",
+                }}
+              >
+                {t("checkIn")} (YYYY-MM-DD HH:mm)
+              </label>
+              <input
+                type="datetime-local"
+                className="input"
+                value={searchParams.checkInTime}
+                style={{ width: "92%" }}
+                onChange={(e) =>
+                  setSearchParams({
+                    ...searchParams,
+                    checkInTime: e.target.value,
+                  })
+                }
+                required
+              />
+            </div>
+            <div>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "0.5rem",
+                  color: "var(--text-muted)",
+                }}
+              >
+                {t("checkOut")} (YYYY-MM-DD HH:mm)
+              </label>
+              <input
+                type="datetime-local"
+                className="input"
+                value={searchParams.checkOutTime}
+                style={{ width: "92%" }}
+                onChange={(e) =>
+                  setSearchParams({
+                    ...searchParams,
+                    checkOutTime: e.target.value,
+                  })
+                }
+                required
+              />
+            </div>
+            <div>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "0.5rem",
+                  color: "var(--text-muted)",
+                }}
+              >
+                {t("guests")}
+              </label>
+              <input
+                type="number"
+                min="1"
+                className="input"
+                value={searchParams.guestCount}
+                style={{ width: "92%" }}
+                onChange={(e) =>
+                  setSearchParams({
+                    ...searchParams,
+                    guestCount: parseInt(e.target.value),
+                  })
+                }
+                required
+              />
+            </div>
+            <div style={{ marginTop: "1.8rem" }}>
+              <button
+                type="submit"
+                className="btn btn-primary"
+                style={{ width: "100%" }}
+              >
+                {t("searchAvailability")}
+              </button>
+            </div>
           </div>
         </form>
       </div>

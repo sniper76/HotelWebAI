@@ -201,8 +201,8 @@ public class SettlementIntegrationTest {
                 Reservation res = Reservation.builder()
                                 .user(user)
                                 .rooms(new ArrayList<>(Collections.singletonList(room))) // Mutable List
-                                .checkInDate(checkIn)
-                                .checkOutDate(checkOut)
+                                .checkInTime(checkIn.atTime(13, 0))
+                                .checkOutTime(checkOut.atTime(11, 0))
                                 .totalPrice(totalPrice)
                                 .currency(currency)
                                 .status(Reservation.ReservationStatus.PENDING)
