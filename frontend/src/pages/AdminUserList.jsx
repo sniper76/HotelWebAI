@@ -29,39 +29,41 @@ const AdminUserList = () => {
         <div className="container" style={{ marginTop: '2rem' }}>
             <h2>{t("userManagement")}</h2>
             <div className="card">
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                    <thead>
-                        <tr style={{ textAlign: 'left', borderBottom: '1px solid var(--border)' }}>
-                            <th style={{ padding: '0.5rem' }}>{t("id")}</th>
-                            <th style={{ padding: '0.5rem' }}>{t("username")}</th>
-                            <th style={{ padding: '0.5rem' }}>{t("fullName")}</th>
-                            <th style={{ padding: '0.5rem' }}>{t("email")}</th>
-                            <th style={{ padding: '0.5rem' }}>{t("role")}</th>
-                            <th style={{ padding: '0.5rem' }}>{t("useYn")}</th>
-                            <th style={{ padding: '0.5rem' }}>{t("actions")}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {users.map(user => (
-                            <tr key={user.id} style={{ borderBottom: '1px solid var(--border)' }}>
-                                <td style={{ padding: '0.5rem' }}>{user.id}</td>
-                                <td style={{ padding: '0.5rem' }}>{user.username}</td>
-                                <td style={{ padding: '0.5rem' }}>{user.fullName}</td>
-                                <td style={{ padding: '0.5rem' }}>{user.email}</td>
-                                <td style={{ padding: '0.5rem' }}>{user.role}</td>
-                                <td style={{ padding: '0.5rem' }}>{user.useYn}</td>
-                                <td style={{ padding: '0.5rem' }}>
-                                    <button
-                                        className="btn btn-primary btn-sm"
-                                        onClick={() => handleEdit(user.id)}
-                                    >
-                                        {t("edit")}
-                                    </button>
-                                </td>
+                <div className="table-container">
+                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                        <thead>
+                            <tr style={{ textAlign: 'left', borderBottom: '1px solid var(--border)' }}>
+                                <th style={{ padding: '0.5rem' }} className="desktop-only">{t("id")}</th>
+                                <th style={{ padding: '0.5rem' }}>{t("username")}</th>
+                                <th style={{ padding: '0.5rem' }} className="desktop-only">{t("fullName")}</th>
+                                <th style={{ padding: '0.5rem' }} className="desktop-only">{t("email")}</th>
+                                <th style={{ padding: '0.5rem' }}>{t("role")}</th>
+                                <th style={{ padding: '0.5rem' }}>{t("useYn")}</th>
+                                <th style={{ padding: '0.5rem' }}>{t("actions")}</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {users.map(user => (
+                                <tr key={user.id} style={{ borderBottom: '1px solid var(--border)' }}>
+                                    <td style={{ padding: '0.5rem' }} className="desktop-only">{user.id}</td>
+                                    <td style={{ padding: '0.5rem' }}>{user.username}</td>
+                                    <td style={{ padding: '0.5rem' }} className="desktop-only">{user.fullName}</td>
+                                    <td style={{ padding: '0.5rem' }} className="desktop-only">{user.email}</td>
+                                    <td style={{ padding: '0.5rem' }}>{user.role}</td>
+                                    <td style={{ padding: '0.5rem' }}>{user.useYn}</td>
+                                    <td style={{ padding: '0.5rem' }}>
+                                        <button
+                                            className="btn btn-primary btn-sm"
+                                            onClick={() => handleEdit(user.id)}
+                                        >
+                                            {t("edit")}
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );

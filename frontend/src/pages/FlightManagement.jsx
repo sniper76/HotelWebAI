@@ -184,7 +184,8 @@ const FlightManagement = () => {
                     <h3>{t("airlines")}</h3>
                     <form
                         onSubmit={handleCreateAirline}
-                        style={{ display: "grid", gap: "1rem", marginTop: "1rem" }}
+                        className="form-grid"
+                        style={{ marginTop: "1rem" }}
                     >
                         <input
                             placeholder={t("airlineName")}
@@ -223,7 +224,8 @@ const FlightManagement = () => {
                         {editingAirlineId === airline.id ? (
                             <form
                                 onSubmit={handleUpdateAirline}
-                                style={{ display: "grid", gap: "0.5rem", marginBottom: "1rem" }}
+                                className="form-grid"
+                                style={{ marginBottom: "1rem" }}
                             >
                                 <input
                                     placeholder={t("name")}
@@ -320,7 +322,7 @@ const FlightManagement = () => {
                                 <h4>{t("newFlight")}</h4>
                                 <form
                                     onSubmit={handleAddFlight}
-                                    style={{ display: "grid", gap: "0.5rem" }}
+                                    className="form-grid"
                                 >
                                     <input
                                         type="hidden"
@@ -391,9 +393,8 @@ const FlightManagement = () => {
                                         {editingFlightId === rt.id ? (
                                             <form
                                                 onSubmit={handleUpdateFlight}
+                                                className="form-grid"
                                                 style={{
-                                                    display: "grid",
-                                                    gap: "0.5rem",
                                                     marginBottom: "0.5rem",
                                                 }}
                                             >

@@ -171,14 +171,10 @@ const Home = () => {
         <h2 style={{ marginBottom: "1rem" }}>{t("findPerfectStay")}</h2>
         <form
           onSubmit={handleSearch}
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-            gap: "1rem",
-          }}
+          className="form-grid" // Use the class we defined in index.css
         >
           {/* Flight Selection Section */}
-          <div style={{ gridColumn: "1 / -1", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+          <div className="form-grid" style={{ gridColumn: "1 / -1" }}> {/* Nested grid */}
             <div>
               <label style={{ display: "block", marginBottom: "0.5rem", color: "var(--text-muted)" }}>
                 {t("selectAirlineOptional")}
@@ -217,7 +213,11 @@ const Home = () => {
             </div>
           </div>
 
-          <div style={{ gridColumn: "1 / -1", display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "1rem" }}>
+          <div className="form-grid" style={{ gridColumn: "1 / -1", gridTemplateColumns: "repeat(4, 1fr)" }}>
+            {/* Note: The inline style for 4 columns will be overridden by the !important in media query on mobile. 
+             However, to be safe, we should rely on the media query or use flex-wrap. 
+             Since index.css sets .form-grid to 1fr on mobile !important, this should work. */
+            }
             <div>
               <label
                 style={{
@@ -232,7 +232,7 @@ const Home = () => {
                 type="datetime-local"
                 className="input"
                 value={searchParams.checkInTime}
-                style={{ width: "92%" }}
+                style={{ width: "95%" }} // Adjusted width
                 onChange={(e) =>
                   setSearchParams({
                     ...searchParams,
@@ -256,7 +256,7 @@ const Home = () => {
                 type="datetime-local"
                 className="input"
                 value={searchParams.checkOutTime}
-                style={{ width: "92%" }}
+                style={{ width: "95%" }} // Adjusted width
                 onChange={(e) =>
                   setSearchParams({
                     ...searchParams,

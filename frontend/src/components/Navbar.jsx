@@ -9,9 +9,11 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const { theme, toggleTheme } = useTheme();
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const handleLogout = () => {
     logout();
+    setIsMenuOpen(false);
     navigate("/login");
   };
 
@@ -19,51 +21,83 @@ const Navbar = () => {
     i18n.changeLanguage(e.target.value);
   };
 
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
-    <nav className="navbar">
-      <div className="container nav-content">
-        <Link
-          to="/"
+    <nav className="navbar" style={{ position: "sticky", top: 0, zIndex: 1000 }}>
+      {/* Mobile Menu Overlay */}
+      {isMenuOpen && (
+        <div
+          onClick={closeMenu}
           style={{
-            fontSize: "1.5rem",
-            fontWeight: "bold",
-            color: "var(--primary)",
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0,0,0,0.5)",
+            zIndex: 998,
           }}
-        >
-          HotelWeb
-        </Link>
-        <div className="nav-links">
+        />
+      )}
+
+      <div className="container nav-content" style={{ position: "relative", zIndex: 999 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+          <Link
+            to="/"
+            style={{
+              fontSize: "1.5rem",
+              fontWeight: "bold",
+              color: "var(--primary)",
+              textDecoration: "none",
+            }}
+            onClick={closeMenu}
+          >
+            HotelWeb
+          </Link>
+
+          {/* Hamburger Button */}
+          <button className="nav-toggle" onClick={toggleMenu} aria-label="Toggle Menu">
+            ☰
+          </button>
+        </div>
+
+        <div className={`nav-links ${isMenuOpen ? "open" : ""}`}>
+
           {user ? (
             <>
-              {/* <div className="nav-links" style={{ marginTop: "0.6rem" }}> */}
-              <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                <Link to="/">{t("search")}</Link>
-                <Link to="/my-reservations">{t("myReservations")}</Link>
+              <Link to="/" onClick={closeMenu}>{t("search")}</Link>
+              <Link to="/my-reservations" onClick={closeMenu}>{t("myReservations")}</Link>
 
-                {(user.role === "OWNER" || user.role === "ADMIN") && (
-                  <>
-                    <Link to="/manage-hotels">{t("manageHotels")}</Link>
-                    <Link to="/check-in">{t("checkInManagement")}</Link>
-                    <Link to="/settlement">{t("settlementReport")}</Link>
-                  </>
-                )}
-                {user.role === "ADMIN" && (
-                  <>
-                    <Link to="/admin/users">{t("userManagement")}</Link>
-                    <Link to="/admin/flights">{t("flightManagement")}</Link>
-                  </>
-                )}
-                {/* Language Toggle */}
+              {(user.role === "OWNER" || user.role === "ADMIN") && (
+                <>
+                  <Link to="/manage-hotels" onClick={closeMenu}>{t("manageHotels")}</Link>
+                  <Link to="/check-in" onClick={closeMenu}>{t("checkInManagement")}</Link>
+                  <Link to="/settlement" onClick={closeMenu}>{t("settlementReport")}</Link>
+                </>
+              )}
+              {user.role === "ADMIN" && (
+                <>
+                  <Link to="/admin/users" onClick={closeMenu}>{t("userManagement")}</Link>
+                  <Link to="/admin/flights" onClick={closeMenu}>{t("flightManagement")}</Link>
+                </>
+              )}
+
+              <div className="nav-controls" style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
                 <select
                   onChange={changeLanguage}
                   value={i18n.language}
+                  className="input"
                   style={{
-                    padding: "0.3rem",
-                    borderRadius: "4px",
-                    border: "1px solid var(--border)",
-                    background: "transparent",
-                    color: "var(--text)",
-                    cursor: "pointer"
+                    padding: "0.4rem",
+                    width: "auto",
+                    margin: 0
                   }}
                 >
                   <option value="ko">KR</option>
@@ -71,19 +105,23 @@ const Navbar = () => {
                   <option value="fil">FIL</option>
                 </select>
 
-                {/* Theme Toggle */}
                 <button
                   onClick={toggleTheme}
                   className="btn-icon"
-                  title="Toggle Theme"
                   style={{ fontSize: "1.2rem", border: "1px solid var(--border)" }}
                 >
                   {theme === 'dark' ? '☀️' : '🌙'}
                 </button>
 
-                <span style={{ color: "var(--text-muted)" }}>
-                  {user.username} ({user.role})
-                </span>
+                <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                  <span style={{ color: "var(--text-muted)", fontSize: "0.8rem" }}>
+                    {user.username}
+                  </span>
+                  <span style={{ fontSize: "0.7rem", fontWeight: "bold", color: "var(--primary)" }}>
+                    {user.role}
+                  </span>
+                </div>
+
                 <button
                   onClick={handleLogout}
                   className="btn"
@@ -91,6 +129,8 @@ const Navbar = () => {
                     backgroundColor: "transparent",
                     border: "1px solid var(--border)",
                     color: "var(--text)",
+                    width: "5.5rem",
+                    padding: "0.4rem 0.8rem"
                   }}
                 >
                   {t("logout")}
@@ -99,25 +139,22 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                <Link to="/login" className="nav-link">
-                  {t("login")}
-                </Link>
-                <Link to="/register" className="nav-link">
-                  {t("register")}
-                </Link>
+              <Link to="/login" className="nav-link" onClick={closeMenu}>
+                {t("login")}
+              </Link>
+              <Link to="/register" className="nav-link" onClick={closeMenu}>
+                {t("register")}
+              </Link>
 
-                {/* Language Toggle */}
+              <div className="nav-controls" style={{ display: "flex", alignItems: "center", gap: "1rem", marginTop: "0.5rem" }}>
                 <select
                   onChange={changeLanguage}
                   value={i18n.language}
+                  className="input"
                   style={{
-                    padding: "0.3rem",
-                    borderRadius: "4px",
-                    border: "1px solid var(--border)",
-                    background: "transparent",
-                    color: "var(--text)",
-                    cursor: "pointer"
+                    padding: "0.4rem",
+                    width: "auto",
+                    margin: 0
                   }}
                 >
                   <option value="ko">KR</option>
@@ -128,7 +165,7 @@ const Navbar = () => {
                   onClick={toggleTheme}
                   className="btn-icon"
                   title="Toggle Theme"
-                  style={{ fontSize: "1.2rem", marginRight: "1rem" }}
+                  style={{ fontSize: "1.2rem" }}
                 >
                   {theme === 'dark' ? '☀️' : '🌙'}
                 </button>

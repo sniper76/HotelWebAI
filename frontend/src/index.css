@@ -109,11 +109,13 @@ h6 {
   color: var(--text-secondary);
   text-decoration: none;
   font-weight: 500;
-  margin-left: 1.5rem;
+  /* margin-left: 1.5rem; Removed in favor of flex gap */
   transition: color 0.2s;
   text-transform: uppercase;
   font-size: 0.875rem;
   letter-spacing: 0.05em;
+  white-space: nowrap;
+  /* Prevent vertical character stacking */
 }
 
 .nav-links a:hover {
@@ -312,4 +314,113 @@ h6 {
 .input:focus {
   border-color: var(--primary);
   outline: none;
+}
+
+/* Responsive Utilities */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem 0.5rem;
+    width: 100%;
+    margin: 0;
+    max-width: 100%;
+  }
+
+  /* Stack Form Grids */
+  .form-grid,
+  .row {
+    grid-template-columns: 1fr !important;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Adjust Typography */
+  h2 {
+    font-size: 1.5rem !important;
+  }
+
+  h3 {
+    font-size: 1.25rem !important;
+  }
+
+  /* Adjust Card padding on mobile */
+  .card {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Table adjustments - Ensure container forces scroll */
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .md-table th,
+  .md-table td {
+    white-space: nowrap;
+    padding: 0.75rem 0.5rem;
+  }
+
+  /* Hide elements with .desktop-only class if added later */
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+/* Navbar Responsive Styles will be handled in Navbar component CSS or inline, 
+   but we can add a helper here */
+/* Navbar Responsive Styles */
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text);
+  padding: 0.5rem;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: block;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--surface);
+    padding: 1rem;
+    box-shadow: var(--shadow-2);
+    align-items: stretch;
+    border-top: 1px solid var(--border);
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .nav-links a {
+    margin: 0;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--border);
+    margin-left: 0;
+    /* Reset desktop margin */
+  }
+
+  .nav-controls {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+    width: 100%;
+  }
 }
