@@ -12,6 +12,9 @@ import AdminUserEdit from './pages/AdminUserEdit';
 import CheckInManager from './pages/CheckInManager';
 import SettlementReport from './pages/SettlementReport';
 import FlightManagement from './pages/FlightManagement';
+import BoardList from './pages/BoardList';
+import BoardWrite from './pages/BoardWrite';
+import BoardDetail from './pages/BoardDetail';
 import AxiosInterceptor from './components/AxiosInterceptor';
 
 import { ThemeProvider } from './context/ThemeContext';
@@ -66,6 +69,20 @@ function App() {
               <FlightManagement />
             </ProtectedRoute>
           } />
+
+          {/* Free Board Routes */}
+          <Route path="/boards" element={<BoardList />} />
+          <Route path="/boards/write" element={
+            <ProtectedRoute>
+              <BoardWrite />
+            </ProtectedRoute>
+          } />
+          <Route path="/boards/edit/:id" element={
+            <ProtectedRoute>
+              <BoardWrite />
+            </ProtectedRoute>
+          } />
+          <Route path="/boards/:id" element={<BoardDetail />} />
         </Routes>
       </div>
     </ThemeProvider>

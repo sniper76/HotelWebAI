@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+
+    <changeSet id="010-create-board-like-table" author="jake">
+        <createTable tableName="board_likes">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="board_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Base Entity Columns -->
+            <column name="use_yn" type="VARCHAR(1)" defaultValue="Y">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_by" type="VARCHAR(255)"/>
+            <column name="updated_at" type="DATETIME"/>
+        </createTable>
+
+        <addUniqueConstraint tableName="board_likes" columnNames="board_id, user_id" constraintName="uq_board_likes_board_user"/>
+
+        <addForeignKeyConstraint baseTableName="board_likes" baseColumnNames="board_id"
+                                 constraintName="fk_board_likes_board"
+                                 referencedTableName="boards" referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>

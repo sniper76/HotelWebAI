@@ -74,6 +74,7 @@ const Navbar = () => {
             <>
               <Link to="/" onClick={closeMenu}>{t("search")}</Link>
               <Link to="/my-reservations" onClick={closeMenu}>{t("myReservations")}</Link>
+              <Link to="/boards" onClick={closeMenu}>{t("freeBoard")}</Link>
 
               {(user.role === "OWNER" || user.role === "ADMIN") && (
                 <>
@@ -139,6 +140,7 @@ const Navbar = () => {
             </>
           ) : (
             <>
+              <Link to="/boards" className="nav-link" onClick={closeMenu}>{t("freeBoard")}</Link>
               <Link to="/login" className="nav-link" onClick={closeMenu}>
                 {t("login")}
               </Link>
