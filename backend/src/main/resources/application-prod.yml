@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://prod-db-host:5432/hotel_db
-    username: prod_user
-    password: prod_password
+    url: jdbc:postgresql://localhost:55432/hotel_db
+    username: ${prod_user}
+    password: ${prod_pass}
     driver-class-name: org.postgresql.Driver
   jpa:
     show-sql: false
