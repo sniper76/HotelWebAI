@@ -48,6 +48,8 @@ public class ReservationDto {
         private List<HotelDto.RoomResponse> rooms;
         private java.time.LocalDateTime actualCheckInTime;
         private java.time.LocalDateTime actualCheckOutTime;
+        private String guestName;
+        private String guestEmail;
     }
 
     @Data

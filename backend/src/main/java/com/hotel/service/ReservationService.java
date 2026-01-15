@@ -246,6 +246,8 @@ public class ReservationService {
                 .currency(reservation.getCurrency())
                 .actualCheckInTime(reservation.getActualCheckInTime())
                 .actualCheckOutTime(reservation.getActualCheckOutTime())
+                .guestName(reservation.getUser().getFullName())
+                .guestEmail(reservation.getUser().getEmail())
                 .rooms(reservation.getRooms().stream()
                         .map(r -> HotelDto.RoomResponse.builder()
                                 .id(r.getId())

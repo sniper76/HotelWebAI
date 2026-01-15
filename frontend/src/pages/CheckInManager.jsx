@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "../api/axiosConfig";
 import { useAuth } from "../context/AuthContext";
 import { useTranslation } from "react-i18next";
+import html2canvas from "html2canvas";
 
 const CheckInManager = () => {
   const [hotels, setHotels] = useState([]);
@@ -12,6 +13,10 @@ const CheckInManager = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const { t } = useTranslation();
+
+  // Voucher State
+  const [voucherModalOpen, setVoucherModalOpen] = useState(false);
+  const [selectedReservationForVoucher, setSelectedReservationForVoucher] = useState(null);
 
   useEffect(() => {
     fetchHotels();
@@ -85,16 +90,45 @@ const CheckInManager = () => {
     }
   };
 
+  const handleViewVoucher = (reservation) => {
+    setSelectedReservationForVoucher(reservation);
+    setVoucherModalOpen(true);
+  };
+
+  const handleDownloadVoucher = async () => {
+    const element = document.getElementById("voucher-content");
+    if (!element) return;
+
+    try {
+      const canvas = await html2canvas(element, { scale: 2 });
+      const link = document.createElement("a");
+      link.href = canvas.toDataURL("image/jpeg", 1.0);
+      // Format: Voucher_GuestName_yyyyMMddHHmmss.jpg
+      const now = new Date();
+      const timestamp = now.toISOString().replace(/[-:T.]/g, "").slice(0, 14); // yyyyMMddHHmmss
+      const guestName = selectedReservationForVoucher.guestName || "Guest";
+      link.download = `Voucher_${guestName}_${timestamp}.jpg`;
+      link.click();
+    } catch (error) {
+      console.error("Failed to download voucher", error);
+    }
+  };
+
   return (
     <div className="container mt-4">
       <h2>{t("checkInManagement")}</h2>
       {message && <div className="alert alert-info">{message}</div>}
 
-      <div className="row mb-4">
-        <div className="col-md-6">
-          <label>{t("selectHotel")}</label>
+      <div className="form-grid">
+        <div>
+          <label
+            style={{
+              display: "block",
+              marginBottom: "0.5rem",
+              color: "var(--text-muted)",
+            }}>{t("selectHotel")}</label>
           <select
-            className="form-control"
+            className="input"
             value={selectedHotelId}
             onChange={(e) => setSelectedHotelId(e.target.value)}
           >
@@ -105,11 +139,16 @@ const CheckInManager = () => {
             ))}
           </select>
         </div>
-        <div className="col-md-6">
-          <label>{t("selectDate")}</label>
+        <div>
+          <label
+            style={{
+              display: "block",
+              marginBottom: "0.5rem",
+              color: "var(--text-muted)",
+            }}>{t("selectDate")}</label>
           <input
             type="date"
-            className="form-control"
+            className="input"
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />
@@ -119,7 +158,7 @@ const CheckInManager = () => {
       {loading ? (
         <p>{t("loading")}</p>
       ) : (
-        <div className="container" style={{ marginTop: "2rem" }}>
+        <div className="container" style={{ marginTop: "0.5rem" }}>
           <div className="card">
             <table style={{ width: "100%", borderCollapse: "collapse" }}>
               <thead>
@@ -165,12 +204,21 @@ const CheckInManager = () => {
                           </button>
                         )}
                       {res.status === "CHECKED_IN" && (
-                        <button
-                          className="btn btn-warning btn-sm"
-                          onClick={() => handleCheckOut(res)}
-                        >
-                          {t("checkOutSettlement")}
-                        </button>
+                        <div style={{ display: "flex", gap: "0.5rem" }}>
+                          <button
+                            className="btn btn-sm"
+                            style={{ backgroundColor: "#17a2b8", color: "white" }}
+                            onClick={() => handleViewVoucher(res)}
+                          >
+                            {t("viewVoucher")}
+                          </button>
+                          <button
+                            className="btn btn-warning btn-sm"
+                            onClick={() => handleCheckOut(res)}
+                          >
+                            {t("checkOutSettlement")}
+                          </button>
+                        </div>
                       )}
                     </td>
                   </tr>
@@ -184,6 +232,72 @@ const CheckInManager = () => {
                 )}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* Voucher Modal */}
+      {voucherModalOpen && selectedReservationForVoucher && (
+        <div style={{
+          position: "fixed", top: 0, left: 0, width: "100%", height: "100%",
+          backgroundColor: "rgba(0,0,0,0.5)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 1000
+        }}>
+          <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "8px", maxWidth: "800px", width: "95%", maxHeight: "90vh", overflowY: "auto" }}>
+            <div id="voucher-content" style={{ padding: "20px", background: "white" }}>
+              <h2 style={{ textAlign: "center", borderBottom: "2px solid #333", paddingBottom: "10px", marginBottom: "20px" }}>
+                {t("voucherTitle")}
+              </h2>
+
+              <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: "20px" }}>
+                <tbody>
+                  <tr>
+                    <th style={{ border: "1px solid #ddd", padding: "10px", textAlign: "left", width: "30%", backgroundColor: "#f9f9f9" }}>{t("bookingReference")}</th>
+                    <td style={{ border: "1px solid #ddd", padding: "10px" }}>{selectedReservationForVoucher.id}</td>
+                  </tr>
+                  <tr>
+                    <th style={{ border: "1px solid #ddd", padding: "10px", textAlign: "left", backgroundColor: "#f9f9f9" }}>{t("hotelDetails")}</th>
+                    <td style={{ border: "1px solid #ddd", padding: "10px" }}>
+                      <strong>{hotels.find(h => h.id == selectedHotelId)?.name || selectedReservationForVoucher.rooms[0]?.hotel?.name}</strong><br />
+                      {hotels.find(h => h.id == selectedHotelId)?.address || selectedReservationForVoucher.rooms[0]?.hotel?.address}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th style={{ border: "1px solid #ddd", padding: "10px", textAlign: "left", backgroundColor: "#f9f9f9" }}>{t("guestDetails")}</th>
+                    <td style={{ border: "1px solid #ddd", padding: "10px" }}>
+                      {selectedReservationForVoucher.guestName}<br />
+                      {selectedReservationForVoucher.guestEmail}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th style={{ border: "1px solid #ddd", padding: "10px", textAlign: "left", backgroundColor: "#f9f9f9" }}>{t("room")}/{t("type")}</th>
+                    <td style={{ border: "1px solid #ddd", padding: "10px" }}>
+                      {selectedReservationForVoucher.rooms.map(r => `Room ${r.roomNumber}`).join(", ")}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th style={{ border: "1px solid #ddd", padding: "10px", textAlign: "left", backgroundColor: "#f9f9f9" }}>{t("period")}</th>
+                    <td style={{ border: "1px solid #ddd", padding: "10px" }}>
+                      {new Date(selectedReservationForVoucher.checkInTime).toLocaleDateString()} ~ {new Date(selectedReservationForVoucher.checkOutTime).toLocaleDateString()}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th style={{ border: "1px solid #ddd", padding: "10px", textAlign: "left", backgroundColor: "#f9f9f9" }}>{t("paymentDetails")}</th>
+                    <td style={{ border: "1px solid #ddd", padding: "10px" }}>
+                      {t("amount")}: {selectedReservationForVoucher.totalPrice} {selectedReservationForVoucher.currency}<br />
+                      {t("status")}: {selectedReservationForVoucher.status}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div style={{ textAlign: "center", fontSize: "0.8rem", color: "#666", marginTop: "20px" }}>
+                <p>This voucher is computer generated.</p>
+              </div>
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px", marginTop: "20px", borderTop: "1px solid #eee", paddingTop: "20px" }}>
+              <button className="btn" onClick={() => setVoucherModalOpen(false)}>{t("close")}</button>
+              <button className="btn btn-primary" onClick={handleDownloadVoucher}>{t("download")}</button>
+            </div>
           </div>
         </div>
       )}

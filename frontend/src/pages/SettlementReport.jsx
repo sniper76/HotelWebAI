@@ -104,11 +104,16 @@ const SettlementReport = () => {
   return (
     <div className="container mt-4">
       <h2>{t("settlementReport")}</h2>
-      <div className="row mb-3">
-        <div className="col-md-4">
-          <label>{t("selectHotel")}</label>
+      <div className="form-grid">
+        <div>
+          <label
+            style={{
+              display: "block",
+              marginBottom: "0.5rem",
+              color: "var(--text-muted)",
+            }}>{t("selectHotel")}</label>
           <select
-            className="form-control"
+            className="input"
             value={selectedHotelId}
             onChange={(e) => setSelectedHotelId(e.target.value)}
           >
@@ -119,38 +124,70 @@ const SettlementReport = () => {
             ))}
           </select>
         </div>
-        <div className="col-md-3">
-          <label>{t("startDate")}</label>
+        <div>
+          <label
+            style={{
+              display: "block",
+              marginBottom: "0.5rem",
+              color: "var(--text-muted)",
+            }}>{t("startDate")}</label>
           <input
             type="date"
-            className="form-control"
+            className="input"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
           />
         </div>
-        <div className="col-md-3">
-          <label>{t("endDate")}</label>
+        <div>
+          <label
+            style={{
+              display: "block",
+              marginBottom: "0.5rem",
+              color: "var(--text-muted)",
+            }}>{t("endDate")}</label>
           <input
             type="date"
-            className="form-control"
+            className="input"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
           />
         </div>
-        <div className="col-md-2 align-self-end">
+        <div>
           <button
-            className="btn btn-outline-secondary me-2"
+            className="btn btn-outline-secondary"
+            style={{
+              display: "block",
+              // margin: "2rem 1rem 1rem 1rem",
+            }}
             onClick={setThisWeek}
           >
             {t("thisWeek")}
           </button>
-          <button className="btn btn-outline-secondary" onClick={setThisMonth}>
+          <button
+            className="btn btn-outline-secondary"
+            style={{
+              display: "block",
+              // margin: "2rem 1rem 1rem 1rem",
+            }}
+            onClick={setThisMonth}>
             {t("thisMonth")}
           </button>
-          <button className="btn btn-outline-secondary" onClick={setBefore30Days}>
+          <button
+            className="btn btn-outline-secondary"
+            style={{
+              display: "block",
+              // margin: "2rem 1rem 1rem 1rem",
+            }}
+            onClick={setBefore30Days}>
             {t("last30Days")}
           </button>
-          <button className="btn btn-primary w-100" onClick={fetchSettlement}>
+          <button
+            className="btn btn-primary"
+            style={{
+              display: "block",
+              margin: "2rem 1rem 1rem 1rem",
+            }}
+            onClick={fetchSettlement}>
             {t("search")}
           </button>
         </div>

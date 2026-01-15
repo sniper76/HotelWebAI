@@ -158,7 +158,18 @@ const resources = {
       "searchByAll": "Search All",
       "keyword": "Keyword",
       "likes": "Likes",
-      "like": "Like"
+      "like": "Like",
+      "viewVoucher": "View Voucher",
+      "voucher": "Voucher",
+      "bookingVoucher": "Booking Voucher",
+      "bookingReference": "Booking Reference",
+      "hotelDetails": "Hotel Details",
+      "guestDetails": "Guest Details",
+      "paymentDetails": "Payment Details",
+      "period": "Period",
+      "download": "Download",
+      "close": "Close",
+      "nights": "Night(s)"
     }
   },
   ko: {
@@ -317,7 +328,18 @@ const resources = {
       "searchByAll": "통합 검색",
       "keyword": "검색어",
       "likes": "좋아요",
-      "like": "좋아요"
+      "like": "좋아요",
+      "viewVoucher": "바우처 보기",
+      "voucher": "바우처",
+      "bookingVoucher": "예약 바우처",
+      "bookingReference": "예약 번호",
+      "hotelDetails": "호텔 정보",
+      "guestDetails": "투숙객 정보",
+      "paymentDetails": "결제 정보",
+      "period": "숙박 기간",
+      "download": "다운로드",
+      "close": "닫기",
+      "nights": "박"
     }
   },
   fil: {
@@ -476,7 +498,18 @@ const resources = {
       "searchByAll": "Maghanap sa Lahat",
       "keyword": "Keyword",
       "likes": "Gusto",
-      "like": "Gusto"
+      "like": "Gusto",
+      "viewVoucher": "Tingnan ang Voucher",
+      "voucher": "Voucher",
+      "bookingVoucher": "Voucher ng Booking",
+      "bookingReference": "Sanggunian ng Booking",
+      "hotelDetails": "Detalye ng Hotel",
+      "guestDetails": "Detalye ng Bisita",
+      "paymentDetails": "Detalye ng Pagbabayad",
+      "period": "Panahon",
+      "download": "I-download",
+      "close": "Isara",
+      "nights": "Gabi"
     }
   }
 };

@@ -19,6 +19,8 @@ const Home = () => {
     };
 
     return {
+      checkInDate: today,
+      checkOutDate: tomorrow,
       checkInTime: toLocalISO(today),
       checkOutTime: toLocalISO(tomorrow),
       guestCount: 1,
@@ -78,7 +80,9 @@ const Home = () => {
       const flight = flights.find(f => f.id.toString() === flightId);
       if (flight) {
         // Set Check-in Date to Current Date (Today)
-        const today = new Date();
+        const checkInDate = searchParams?.checkInDate;
+        const checkOutDate = searchParams?.checkOutDate;
+        const today = new Date(checkInDate);
         // Keep selected flight time? Or User Requirement says "Check-in at 1:00 PM"?
         // Actually, if flight arrival is X, maybe check-in should handle it?
         // But requested is "Standard criteria ... Checkin 13:00".
@@ -89,7 +93,7 @@ const Home = () => {
         // console.log('flight', flight.departureTime);
         const arrivalTime = flight.arrivalTime.split(':');
         today.setHours(arrivalTime[0], arrivalTime[1], 0, 0);
-        const tomorrow = new Date(today);
+        const tomorrow = new Date(checkOutDate);
         tomorrow.setDate(tomorrow.getDate() + 1);
         tomorrow.setHours(tomorrow.getHours() - 1, arrivalTime[1], 0, 0);
 
@@ -115,9 +119,23 @@ const Home = () => {
   const handleSearch = async (e) => {
     e.preventDefault();
     try {
-      console.log('searchParams', searchParams);
+      const today = new Date(searchParams?.checkInDate);
+      const departureTime = new Date(searchParams?.checkInTime);
+      today.setDate(today.getDate());
+      today.setHours(departureTime.getHours(), departureTime.getMinutes(), 0, 0);
+
+      const tomorrow = new Date(searchParams?.checkOutDate);
+      const arrivalTime = new Date(searchParams?.checkOutTime);
+      tomorrow.setDate(tomorrow.getDate());
+      tomorrow.setHours(arrivalTime.getHours(), arrivalTime.getMinutes(), 0, 0);
+      const params = {
+        ...searchParams,
+        checkInTime: toLocalISO(today),
+        checkOutTime: toLocalISO(tomorrow)
+      };
+      // console.log('params', params, searchParams);
       const response = await api.get("/reservations/search", {
-        params: searchParams,
+        params: params,
       });
       setAvailableRooms(response.data);
       setSelectedRooms([]);
@@ -173,8 +191,85 @@ const Home = () => {
           onSubmit={handleSearch}
           className="form-grid" // Use the class we defined in index.css
         >
-          {/* Flight Selection Section */}
-          <div className="form-grid" style={{ gridColumn: "1 / -1" }}> {/* Nested grid */}
+
+          <div className="form-grid" style={{ gridColumn: "1 / -1", gridTemplateColumns: "repeat(6, 1fr)" }}>
+            {/* Note: The inline style for 4 columns will be overridden by the !important in media query on mobile. 
+             However, to be safe, we should rely on the media query or use flex-wrap. 
+             Since index.css sets .form-grid to 1fr on mobile !important, this should work. */
+            }
+            <div>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "0.5rem",
+                  color: "var(--text-muted)",
+                }}
+              >
+                {t("checkIn")}
+              </label>
+              <input
+                type="date"
+                className="input"
+                value={searchParams.checkInDate}
+                style={{ width: "95%" }} // Adjusted width
+                onChange={(e) =>
+                  setSearchParams({
+                    ...searchParams,
+                    checkInDate: e.target.value,
+                  })
+                }
+                required
+              />
+            </div>
+            <div>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "0.5rem",
+                  color: "var(--text-muted)",
+                }}
+              >
+                {t("checkOut")}
+              </label>
+              <input
+                type="date"
+                className="input"
+                value={searchParams.checkOutDate}
+                style={{ width: "95%" }} // Adjusted width
+                onChange={(e) =>
+                  setSearchParams({
+                    ...searchParams,
+                    checkOutDate: e.target.value,
+                  })
+                }
+                required
+              />
+            </div>
+            <div>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "0.5rem",
+                  color: "var(--text-muted)",
+                }}
+              >
+                {t("guests")}
+              </label>
+              <input
+                type="number"
+                min="1"
+                className="input"
+                value={searchParams.guestCount}
+                style={{ width: "92%" }}
+                onChange={(e) =>
+                  setSearchParams({
+                    ...searchParams,
+                    guestCount: parseInt(e.target.value),
+                  })
+                }
+                required
+              />
+            </div>
             <div>
               <label style={{ display: "block", marginBottom: "0.5rem", color: "var(--text-muted)" }}>
                 {t("selectAirlineOptional")}
@@ -210,86 +305,6 @@ const Home = () => {
                   </option>
                 ))}
               </select>
-            </div>
-          </div>
-
-          <div className="form-grid" style={{ gridColumn: "1 / -1", gridTemplateColumns: "repeat(4, 1fr)" }}>
-            {/* Note: The inline style for 4 columns will be overridden by the !important in media query on mobile. 
-             However, to be safe, we should rely on the media query or use flex-wrap. 
-             Since index.css sets .form-grid to 1fr on mobile !important, this should work. */
-            }
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: "0.5rem",
-                  color: "var(--text-muted)",
-                }}
-              >
-                {t("checkIn")} (YYYY-MM-DD HH:mm)
-              </label>
-              <input
-                type="datetime-local"
-                className="input"
-                value={searchParams.checkInTime}
-                style={{ width: "95%" }} // Adjusted width
-                onChange={(e) =>
-                  setSearchParams({
-                    ...searchParams,
-                    checkInTime: e.target.value,
-                  })
-                }
-                required
-              />
-            </div>
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: "0.5rem",
-                  color: "var(--text-muted)",
-                }}
-              >
-                {t("checkOut")} (YYYY-MM-DD HH:mm)
-              </label>
-              <input
-                type="datetime-local"
-                className="input"
-                value={searchParams.checkOutTime}
-                style={{ width: "95%" }} // Adjusted width
-                onChange={(e) =>
-                  setSearchParams({
-                    ...searchParams,
-                    checkOutTime: e.target.value,
-                  })
-                }
-                required
-              />
-            </div>
-            <div>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: "0.5rem",
-                  color: "var(--text-muted)",
-                }}
-              >
-                {t("guests")}
-              </label>
-              <input
-                type="number"
-                min="1"
-                className="input"
-                value={searchParams.guestCount}
-                style={{ width: "92%" }}
-                onChange={(e) =>
-                  setSearchParams({
-                    ...searchParams,
-                    guestCount: parseInt(e.target.value),
-                  })
-                }
-                required
-              />
             </div>
             <div style={{ marginTop: "1.8rem" }}>
               <button
