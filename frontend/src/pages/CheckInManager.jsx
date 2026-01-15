@@ -243,53 +243,55 @@ const CheckInManager = () => {
           backgroundColor: "rgba(0,0,0,0.5)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 1000
         }}>
           <div style={{ backgroundColor: "white", padding: "2rem", borderRadius: "8px", maxWidth: "800px", width: "95%", maxHeight: "90vh", overflowY: "auto" }}>
-            <div id="voucher-content" style={{ padding: "20px", background: "white" }}>
-              <h2 style={{ textAlign: "center", borderBottom: "2px solid #333", paddingBottom: "10px", marginBottom: "20px" }}>
+            <div id="voucher-content" style={{ padding: "20px", background: "white", color: "black" }}>
+              <h2 style={{ textAlign: "center", borderBottom: "2px solid black", paddingBottom: "10px", marginBottom: "20px", color: "black" }}>
                 {t("voucherTitle")}
               </h2>
 
-              <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: "20px" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: "20px", color: "black" }}>
                 <tbody>
                   <tr>
-                    <th style={{ border: "1px solid #ddd", padding: "10px", textAlign: "left", width: "30%", backgroundColor: "#f9f9f9" }}>{t("bookingReference")}</th>
-                    <td style={{ border: "1px solid #ddd", padding: "10px" }}>{selectedReservationForVoucher.id}</td>
+                    <th style={{ border: "1px solid black", padding: "10px", textAlign: "left", width: "30%", backgroundColor: "#f9f9f9", color: "black" }}>{t("bookingReference")}</th>
+                    <td style={{ border: "1px solid black", padding: "10px", color: "black" }}>{selectedReservationForVoucher.id}</td>
                   </tr>
                   <tr>
-                    <th style={{ border: "1px solid #ddd", padding: "10px", textAlign: "left", backgroundColor: "#f9f9f9" }}>{t("hotelDetails")}</th>
-                    <td style={{ border: "1px solid #ddd", padding: "10px" }}>
+                    <th style={{ border: "1px solid black", padding: "10px", textAlign: "left", backgroundColor: "#f9f9f9", color: "black" }}>{t("hotelDetails")}</th>
+                    <td style={{ border: "1px solid black", padding: "10px", color: "black" }}>
                       <strong>{hotels.find(h => h.id == selectedHotelId)?.name || selectedReservationForVoucher.rooms[0]?.hotel?.name}</strong><br />
                       {hotels.find(h => h.id == selectedHotelId)?.address || selectedReservationForVoucher.rooms[0]?.hotel?.address}
                     </td>
                   </tr>
                   <tr>
-                    <th style={{ border: "1px solid #ddd", padding: "10px", textAlign: "left", backgroundColor: "#f9f9f9" }}>{t("guestDetails")}</th>
-                    <td style={{ border: "1px solid #ddd", padding: "10px" }}>
+                    <th style={{ border: "1px solid black", padding: "10px", textAlign: "left", backgroundColor: "#f9f9f9", color: "black" }}>{t("guestDetails")}</th>
+                    <td style={{ border: "1px solid black", padding: "10px", color: "black" }}>
                       {selectedReservationForVoucher.guestName}<br />
                       {selectedReservationForVoucher.guestEmail}
                     </td>
                   </tr>
                   <tr>
-                    <th style={{ border: "1px solid #ddd", padding: "10px", textAlign: "left", backgroundColor: "#f9f9f9" }}>{t("room")}/{t("type")}</th>
-                    <td style={{ border: "1px solid #ddd", padding: "10px" }}>
+                    <th style={{ border: "1px solid black", padding: "10px", textAlign: "left", backgroundColor: "#f9f9f9", color: "black" }}>{t("room")}/{t("type")}</th>
+                    <td style={{ border: "1px solid black", padding: "10px", color: "black" }}>
                       {selectedReservationForVoucher.rooms.map(r => `Room ${r.roomNumber}`).join(", ")}
                     </td>
                   </tr>
                   <tr>
-                    <th style={{ border: "1px solid #ddd", padding: "10px", textAlign: "left", backgroundColor: "#f9f9f9" }}>{t("period")}</th>
-                    <td style={{ border: "1px solid #ddd", padding: "10px" }}>
+                    <th style={{ border: "1px solid black", padding: "10px", textAlign: "left", backgroundColor: "#f9f9f9", color: "black" }}>{t("period")}</th>
+                    <td style={{ border: "1px solid black", padding: "10px", color: "black" }}>
                       {new Date(selectedReservationForVoucher.checkInTime).toLocaleDateString()} ~ {new Date(selectedReservationForVoucher.checkOutTime).toLocaleDateString()}
                     </td>
                   </tr>
                   <tr>
-                    <th style={{ border: "1px solid #ddd", padding: "10px", textAlign: "left", backgroundColor: "#f9f9f9" }}>{t("paymentDetails")}</th>
-                    <td style={{ border: "1px solid #ddd", padding: "10px" }}>
-                      {t("amount")}: {selectedReservationForVoucher.totalPrice} {selectedReservationForVoucher.currency}<br />
+                    <th style={{ border: "1px solid black", padding: "10px", textAlign: "left", backgroundColor: "#f9f9f9", color: "black" }}>{t("paymentDetails")}</th>
+                    <td style={{ border: "1px solid black", padding: "10px", color: "black" }}>
+                      <span style={{ color: "#E91E63", fontWeight: "bold" }}>
+                        {t("amount")}: {selectedReservationForVoucher.totalPrice} {selectedReservationForVoucher.currency}
+                      </span><br />
                       {t("status")}: {selectedReservationForVoucher.status}
                     </td>
                   </tr>
                 </tbody>
               </table>
-              <div style={{ textAlign: "center", fontSize: "0.8rem", color: "#666", marginTop: "20px" }}>
+              <div style={{ textAlign: "center", fontSize: "0.8rem", color: "black", marginTop: "20px" }}>
                 <p>This voucher is computer generated.</p>
               </div>
             </div>
