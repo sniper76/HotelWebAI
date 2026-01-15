@@ -9,6 +9,9 @@ const HotelManagement = () => {
     name: "",
     address: "",
     description: "",
+    bankName: "",
+    accountHolder: "",
+    accountNumber: "",
     useYn: "Y",
   });
   const { t } = useTranslation();
@@ -54,7 +57,8 @@ const HotelManagement = () => {
     try {
       await api.post("/owner/hotels", newHotel);
       setShowAddHotel(false);
-      setNewHotel({ name: "", address: "", description: "", useYn: "Y" });
+      setShowAddHotel(false);
+      setNewHotel({ name: "", address: "", description: "", bankName: "", accountHolder: "", accountNumber: "", useYn: "Y" });
       fetchHotels();
     } catch (error) {
       alert("Failed to create hotel");
@@ -78,6 +82,9 @@ const HotelManagement = () => {
       name: hotel.name,
       address: hotel.address,
       description: hotel.description,
+      bankName: hotel.bankName || "",
+      accountHolder: hotel.accountHolder || "",
+      accountNumber: hotel.accountNumber || "",
       useYn: hotel.useYn || "Y",
     });
   };
@@ -209,6 +216,34 @@ const HotelManagement = () => {
                 setNewHotel({ ...newHotel, description: e.target.value })
               }
             />
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem" }}>
+              <input
+                placeholder={t("bankName")}
+                className="input"
+                style={{ width: "90%" }}
+                value={newHotel.bankName}
+                onChange={(e) => setNewHotel({ ...newHotel, bankName: e.target.value })}
+              />
+              <input
+                placeholder={t("accountHolder")}
+                className="input"
+                style={{ width: "90%" }}
+                value={newHotel.accountHolder}
+                onChange={(e) => setNewHotel({ ...newHotel, accountHolder: e.target.value })}
+              />
+              <input
+                placeholder={t("accountNumber")}
+                className="input"
+                style={{ width: "90%" }}
+                value={newHotel.accountNumber}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (/^[0-9-]*$/.test(val)) {
+                    setNewHotel({ ...newHotel, accountNumber: val });
+                  }
+                }}
+              />
+            </div>
             <select
               className="input"
               style={{ width: "97%" }}
@@ -267,6 +302,34 @@ const HotelManagement = () => {
                     })
                   }
                 />
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.5rem" }}>
+                  <input
+                    placeholder={t("bankName")}
+                    className="input"
+                    style={{ width: "97%" }}
+                    value={editHotelData.bankName}
+                    onChange={(e) => setEditHotelData({ ...editHotelData, bankName: e.target.value })}
+                  />
+                  <input
+                    placeholder={t("accountHolder")}
+                    className="input"
+                    style={{ width: "97%" }}
+                    value={editHotelData.accountHolder}
+                    onChange={(e) => setEditHotelData({ ...editHotelData, accountHolder: e.target.value })}
+                  />
+                  <input
+                    placeholder={t("accountNumber")}
+                    className="input"
+                    style={{ width: "97%" }}
+                    value={editHotelData.accountNumber}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (/^[0-9-]*$/.test(val)) {
+                        setEditHotelData({ ...editHotelData, accountNumber: val });
+                      }
+                    }}
+                  />
+                </div>
                 <select
                   className="input"
                   style={{ width: "97%" }}

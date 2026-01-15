@@ -34,6 +34,9 @@ public class HotelService {
                                 .address(request.getAddress())
                                 .description(request.getDescription())
                                 .owner(owner)
+                                .bankName(request.getBankName())
+                                .accountHolder(request.getAccountHolder())
+                                .accountNumber(request.getAccountNumber())
                                 .build();
 
                 Hotel saved = hotelRepository.save(hotel);
@@ -97,6 +100,9 @@ public class HotelService {
                 hotel.setName(request.getName());
                 hotel.setAddress(request.getAddress());
                 hotel.setDescription(request.getDescription());
+                hotel.setBankName(request.getBankName());
+                hotel.setAccountHolder(request.getAccountHolder());
+                hotel.setAccountNumber(request.getAccountNumber());
 
                 Hotel saved = hotelRepository.save(hotel);
                 return mapToHotelResponse(saved);
@@ -143,6 +149,9 @@ public class HotelService {
                                 .name(hotel.getName())
                                 .address(hotel.getAddress())
                                 .description(hotel.getDescription())
+                                .bankName(hotel.getBankName())
+                                .accountHolder(hotel.getAccountHolder())
+                                .accountNumber(hotel.getAccountNumber())
                                 .roomTypes(hotel.getRoomTypes() != null
                                                 ? hotel.getRoomTypes().stream().map(this::mapToRoomTypeResponse)
                                                                 .collect(Collectors.toList())

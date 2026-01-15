@@ -18,6 +18,9 @@ public class HotelDto {
         private String name;
         private String address;
         private String description;
+        private String bankName;
+        private String accountHolder;
+        private String accountNumber;
     }
 
     @Data
@@ -29,6 +32,9 @@ public class HotelDto {
         private String name;
         private String address;
         private String description;
+        private String bankName;
+        private String accountHolder;
+        private String accountNumber;
         private List<RoomTypeResponse> roomTypes;
     }
 

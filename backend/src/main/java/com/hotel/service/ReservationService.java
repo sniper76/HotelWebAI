@@ -264,6 +264,9 @@ public class ReservationService {
                 .name(hotel.getName())
                 .address(hotel.getAddress())
                 .description(hotel.getDescription())
+                .accountHolder(hotel.getAccountHolder())
+                .accountNumber(hotel.getAccountNumber())
+                .bankName(hotel.getBankName())
                 .build();
     }
 }

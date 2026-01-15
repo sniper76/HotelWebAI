@@ -269,6 +269,18 @@ const CheckInManager = () => {
                     </td>
                   </tr>
                   <tr>
+                    <th style={{ border: "1px solid black", padding: "10px", textAlign: "left", backgroundColor: "#f9f9f9", color: "black" }}>{t("bankName")} / {t("accountHolder")}</th>
+                    <td style={{ border: "1px solid black", padding: "10px", color: "black" }}>
+                      {selectedReservationForVoucher.rooms[0]?.hotel?.bankName} / {selectedReservationForVoucher.rooms[0]?.hotel?.accountHolder}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th style={{ border: "1px solid black", padding: "10px", textAlign: "left", backgroundColor: "#f9f9f9", color: "black" }}>{t("accountNumber")}</th>
+                    <td style={{ border: "1px solid black", padding: "10px", color: "black" }}>
+                      {selectedReservationForVoucher.rooms[0]?.hotel?.accountNumber}
+                    </td>
+                  </tr>
+                  <tr>
                     <th style={{ border: "1px solid black", padding: "10px", textAlign: "left", backgroundColor: "#f9f9f9", color: "black" }}>{t("room")}/{t("type")}</th>
                     <td style={{ border: "1px solid black", padding: "10px", color: "black" }}>
                       {selectedReservationForVoucher.rooms.map(r => `Room ${r.roomNumber}`).join(", ")}
@@ -297,7 +309,7 @@ const CheckInManager = () => {
             </div>
 
             <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px", marginTop: "20px", borderTop: "1px solid #eee", paddingTop: "20px" }}>
-              <button className="btn" onClick={() => setVoucherModalOpen(false)}>{t("close")}</button>
+              <button className="btn" style={{ border: "1px solid black", color: "black" }} onClick={() => setVoucherModalOpen(false)}>{t("close")}</button>
               <button className="btn btn-primary" onClick={handleDownloadVoucher}>{t("download")}</button>
             </div>
           </div>

@@ -29,6 +29,11 @@ public class Hotel extends BaseEntity {
     private String address;
     private String description;
 
+    // Bank Info
+    private String bankName;
+    private String accountHolder;
+    private String accountNumber;
+
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
     private List<RoomType> roomTypes;
 }

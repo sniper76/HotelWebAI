@@ -169,7 +169,12 @@ const resources = {
       "period": "Period",
       "download": "Download",
       "close": "Close",
-      "nights": "Night(s)"
+      "nights": "Night(s)",
+      "voucherTitle": "Voucher",
+      // Bank Info
+      "bankName": "Bank Name",
+      "accountHolder": "Account Holder",
+      "accountNumber": "Account Number",
     }
   },
   ko: {
@@ -339,7 +344,12 @@ const resources = {
       "period": "숙박 기간",
       "download": "다운로드",
       "close": "닫기",
-      "nights": "박"
+      "nights": "박",
+      "voucherTitle": "바우처",
+      // Bank Info
+      "bankName": "은행명",
+      "accountHolder": "예금주명",
+      "accountNumber": "계좌번호",
     }
   },
   fil: {
@@ -509,7 +519,12 @@ const resources = {
       "period": "Panahon",
       "download": "I-download",
       "close": "Isara",
-      "nights": "Gabi"
+      "nights": "Gabi",
+      "voucherTitle": "Voucher",
+      // Bank Info
+      "bankName": "Pangalan ng Bangko",
+      "accountHolder": "Pangalan ng May-ari",
+      "accountNumber": "Numero ng Account",
     }
   }
 };

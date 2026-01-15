@@ -13,5 +13,6 @@
     <include file="classpath:/db/changelog/changes/008-migrate-reservation-dates-to-times.xml"/>
     <include file="classpath:/db/changelog/changes/009-create-board-tables.xml"/>
     <include file="classpath:/db/changelog/changes/010-create-board-like-table.xml"/>
+    <include file="classpath:/db/changelog/changes/011-add-bank-info-to-hotels.xml"/>
 
 </databaseChangeLog>
