@@ -43,7 +43,13 @@ const AdminUserList = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {users.map(user => (
+                            {users.length === 0 ? (
+                                <tr>
+                                    <td colSpan="7" style={{ textAlign: "center", padding: "2rem" }}>
+                                        {t("noUsers")}
+                                    </td>
+                                </tr>
+                            ) : (users.map(user => (
                                 <tr key={user.id} style={{ borderBottom: '1px solid var(--border)' }}>
                                     <td style={{ padding: '0.5rem' }} className="desktop-only">{user.id}</td>
                                     <td style={{ padding: '0.5rem' }}>{user.username}</td>
@@ -60,7 +66,7 @@ const AdminUserList = () => {
                                         </button>
                                     </td>
                                 </tr>
-                            ))}
+                            )))}
                         </tbody>
                     </table>
                 </div>

@@ -30,7 +30,9 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
+
     private final HotelRepository hotelRepository;
+    private final com.hotel.repository.DiscountPolicyRepository discountPolicyRepository;
 
     @Transactional(readOnly = true)
     public List<ReservationDto.AvailableRoomResponse> searchAvailableRooms(java.time.LocalDateTime checkIn,
@@ -109,6 +111,44 @@ public class ReservationService {
                 totalPrice = totalPrice.add(roomPrice);
             }
 
+            // Apply Discount Logic
+            List<com.hotel.entity.DiscountPolicy> policies = discountPolicyRepository.findByHotelId(hotelId);
+            BigDecimal discountAmount = BigDecimal.ZERO;
+            String appliedPolicyName = null;
+
+            com.hotel.entity.DiscountPolicy bestPolicy = null;
+            BigDecimal maxDiscount = BigDecimal.ZERO;
+
+            for (com.hotel.entity.DiscountPolicy policy : policies) {
+                if (paymentEligibleForDiscount(nights, policy.getMinDays())) {
+                    BigDecimal currentDiscount = BigDecimal.ZERO;
+                    if (policy.getType() == com.hotel.entity.DiscountPolicy.DiscountType.PERCENTAGE) {
+                        if (policy.getDiscountRate() != null) {
+                            currentDiscount = totalPrice.multiply(policy.getDiscountRate())
+                                    .divide(BigDecimal.valueOf(100));
+                        }
+                    } else if (policy.getType() == com.hotel.entity.DiscountPolicy.DiscountType.FIXED_AMOUNT) {
+                        if (policy.getDiscountAmount() != null) {
+                            currentDiscount = policy.getDiscountAmount().multiply(BigDecimal.valueOf(nights));
+                        }
+                    }
+
+                    if (currentDiscount.compareTo(maxDiscount) > 0) {
+                        maxDiscount = currentDiscount;
+                        bestPolicy = policy;
+                    }
+                }
+            }
+
+            if (bestPolicy != null) {
+                discountAmount = maxDiscount;
+                appliedPolicyName = bestPolicy.getName();
+                totalPrice = totalPrice.subtract(discountAmount);
+                if (totalPrice.compareTo(BigDecimal.ZERO) < 0) {
+                    totalPrice = BigDecimal.ZERO;
+                }
+            }
+
             Reservation reservation = Reservation.builder()
                     .user(user)
                     .checkInTime(request.getCheckInTime())
@@ -117,6 +157,8 @@ public class ReservationService {
                     .status(Reservation.ReservationStatus.PENDING)
                     .totalPrice(totalPrice)
                     .currency(request.getCurrency() != null ? request.getCurrency() : "USD")
+                    .discountPrice(discountAmount)
+                    .discountPolicyName(appliedPolicyName)
                     .rooms(roomList.stream().map(HotelRoomDto::getRoom).toList())
                     .build();
 
@@ -244,6 +286,8 @@ public class ReservationService {
                 .status(reservation.getStatus().name())
                 .totalPrice(reservation.getTotalPrice())
                 .currency(reservation.getCurrency())
+                .discountPrice(reservation.getDiscountPrice())
+                .discountPolicyName(reservation.getDiscountPolicyName())
                 .actualCheckInTime(reservation.getActualCheckInTime())
                 .actualCheckOutTime(reservation.getActualCheckOutTime())
                 .guestName(reservation.getUser().getFullName())
@@ -268,5 +312,11 @@ public class ReservationService {
                 .accountNumber(hotel.getAccountNumber())
                 .bankName(hotel.getBankName())
                 .build();
+    }
+
+    private boolean paymentEligibleForDiscount(long nights, Integer minDays) {
+        if (minDays == null)
+            return true;
+        return nights >= minDays;
     }
 }

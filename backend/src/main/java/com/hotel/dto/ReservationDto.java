@@ -50,6 +50,8 @@ public class ReservationDto {
         private java.time.LocalDateTime actualCheckOutTime;
         private String guestName;
         private String guestEmail;
+        private BigDecimal discountPrice;
+        private String discountPolicyName;
     }
 
     @Data

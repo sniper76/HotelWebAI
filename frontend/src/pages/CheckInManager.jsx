@@ -292,6 +292,22 @@ const CheckInManager = () => {
                       {new Date(selectedReservationForVoucher.checkInTime).toLocaleDateString()} ~ {new Date(selectedReservationForVoucher.checkOutTime).toLocaleDateString()}
                     </td>
                   </tr>
+                  {selectedReservationForVoucher.discountPrice > 0 && (
+                    <>
+                      <tr>
+                        <th style={{ border: "1px solid black", padding: "10px", textAlign: "left", backgroundColor: "#f9f9f9", color: "black" }}>{t("discount")}</th>
+                        <td style={{ border: "1px solid black", padding: "10px", color: "black" }}>
+                          {selectedReservationForVoucher.discountPolicyName} (-{selectedReservationForVoucher.discountPrice} {selectedReservationForVoucher.currency})
+                        </td>
+                      </tr>
+                      <tr>
+                        <th style={{ border: "1px solid black", padding: "10px", textAlign: "left", backgroundColor: "#f9f9f9", color: "black" }}>{t("originalPrice")}</th>
+                        <td style={{ border: "1px solid black", padding: "10px", color: "black" }}>
+                          {selectedReservationForVoucher.totalPrice + selectedReservationForVoucher.discountPrice} {selectedReservationForVoucher.currency}
+                        </td>
+                      </tr>
+                    </>
+                  )}
                   <tr>
                     <th style={{ border: "1px solid black", padding: "10px", textAlign: "left", backgroundColor: "#f9f9f9", color: "black" }}>{t("paymentDetails")}</th>
                     <td style={{ border: "1px solid black", padding: "10px", color: "black" }}>

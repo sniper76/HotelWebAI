@@ -214,6 +214,7 @@ const SettlementReport = () => {
                 <th style={{ padding: "0.5rem" }}>{t("checkoutTime")}</th>
                 <th style={{ padding: "0.5rem" }}>{t("room")}</th>
                 <th style={{ padding: "0.5rem" }}>{t("paymentAmount")}</th>
+                <th style={{ padding: "0.5rem" }}>{t("discount")}</th>
                 <th style={{ padding: "0.5rem" }}>{t("currency")}</th>
               </tr>
             </thead>
@@ -227,9 +228,11 @@ const SettlementReport = () => {
                   </td>
                   <td>{r.rooms.map((rm) => rm.roomNumber).join(", ")}</td>
                   <td>{r.totalPrice}</td>
+                  <td>{r.discountPrice > 0 ? `${r.discountPrice} (${r.discountPolicyName})` : "-"}</td>
                   <td>{r.currency}</td>
                 </tr>
               ))}
+              {reservations.length === 0 && <tr><td colSpan="5" style={{ textAlign: "center", padding: "2rem" }}>{t("noReservations")}</td></tr>}
             </tbody>
           </table>
         </>

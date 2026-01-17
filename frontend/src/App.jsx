@@ -11,6 +11,7 @@ import AdminUserList from './pages/AdminUserList';
 import AdminUserEdit from './pages/AdminUserEdit';
 import CheckInManager from './pages/CheckInManager';
 import SettlementReport from './pages/SettlementReport';
+import DiscountManagement from './pages/DiscountManagement';
 import FlightManagement from './pages/FlightManagement';
 import BoardList from './pages/BoardList';
 import BoardWrite from './pages/BoardWrite';
@@ -39,6 +40,12 @@ function App() {
           <Route path="/manage-hotels" element={
             <ProtectedRoute roles={['OWNER', 'ADMIN']}>
               <HotelManagement />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/manage-discounts" element={
+            <ProtectedRoute roles={['OWNER', 'ADMIN']}>
+              <DiscountManagement />
             </ProtectedRoute>
           } />
 

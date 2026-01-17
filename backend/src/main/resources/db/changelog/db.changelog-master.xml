@@ -14,5 +14,6 @@
     <include file="classpath:/db/changelog/changes/009-create-board-tables.xml"/>
     <include file="classpath:/db/changelog/changes/010-create-board-like-table.xml"/>
     <include file="classpath:/db/changelog/changes/011-add-bank-info-to-hotels.xml"/>
+    <include file="classpath:/db/changelog/changes/012-add-discount-management.xml"/>
 
 </databaseChangeLog>

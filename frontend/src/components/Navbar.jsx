@@ -79,6 +79,7 @@ const Navbar = () => {
               {(user.role === "OWNER" || user.role === "ADMIN") && (
                 <>
                   <Link to="/manage-hotels" onClick={closeMenu}>{t("manageHotels")}</Link>
+                  <Link to="/manage-discounts" onClick={closeMenu}>{t("discountManagement")}</Link>
                   <Link to="/check-in" onClick={closeMenu}>{t("checkInManagement")}</Link>
                   <Link to="/settlement" onClick={closeMenu}>{t("settlementReport")}</Link>
                 </>
