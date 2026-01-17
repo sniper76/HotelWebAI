@@ -152,12 +152,11 @@ const SettlementReport = () => {
             onChange={(e) => setEndDate(e.target.value)}
           />
         </div>
-        <div>
+        <div style={{ display: "flex", justifyContent: "flex-end", gap: "1px", marginTop: "20px", paddingTop: "12px" }}>
           <button
             className="btn btn-outline-secondary"
             style={{
               display: "block",
-              // margin: "2rem 1rem 1rem 1rem",
             }}
             onClick={setThisWeek}
           >
@@ -167,7 +166,6 @@ const SettlementReport = () => {
             className="btn btn-outline-secondary"
             style={{
               display: "block",
-              // margin: "2rem 1rem 1rem 1rem",
             }}
             onClick={setThisMonth}>
             {t("thisMonth")}
@@ -176,7 +174,6 @@ const SettlementReport = () => {
             className="btn btn-outline-secondary"
             style={{
               display: "block",
-              // margin: "2rem 1rem 1rem 1rem",
             }}
             onClick={setBefore30Days}>
             {t("last30Days")}
@@ -185,7 +182,6 @@ const SettlementReport = () => {
             className="btn btn-primary"
             style={{
               display: "block",
-              margin: "2rem 1rem 1rem 1rem",
             }}
             onClick={fetchSettlement}>
             {t("search")}
