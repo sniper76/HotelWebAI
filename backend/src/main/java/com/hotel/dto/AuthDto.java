@@ -39,4 +39,13 @@ public class AuthDto {
         private String username;
         private String language;
     }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ChangePasswordRequest {
+        private String oldPassword;
+        private String newPassword;
+    }
 }

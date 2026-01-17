@@ -25,4 +25,13 @@ public class AuthController {
     public ResponseEntity<AuthDto.AuthResponse> login(@RequestBody AuthDto.AuthRequest request) {
         return ResponseEntity.ok(authService.authenticate(request));
     }
+
+    @PostMapping("/change-password")
+    @org.springframework.security.access.prepost.PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Void> changePassword(
+            @RequestBody AuthDto.ChangePasswordRequest request,
+            @org.springframework.security.core.annotation.AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails userDetails) {
+        authService.changePassword(userDetails.getUsername(), request.getOldPassword(), request.getNewPassword());
+        return ResponseEntity.ok().build();
+    }
 }

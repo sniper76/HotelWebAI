@@ -4,12 +4,15 @@ import { useAuth } from "../context/AuthContext";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../context/ThemeContext";
 
+import PasswordChangeModal from "./PasswordChangeModal";
+
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [showPasswordModal, setShowPasswordModal] = React.useState(false);
 
   const handleLogout = () => {
     logout();
@@ -31,6 +34,7 @@ const Navbar = () => {
 
   return (
     <nav className="navbar" style={{ position: "sticky", top: 0, zIndex: 1000 }}>
+      {showPasswordModal && <PasswordChangeModal onClose={() => setShowPasswordModal(false)} />}
       {/* Mobile Menu Overlay */}
       {isMenuOpen && (
         <div
@@ -123,6 +127,15 @@ const Navbar = () => {
                     {user.role}
                   </span>
                 </div>
+
+                <button
+                  onClick={() => setShowPasswordModal(true)}
+                  className="btn-icon"
+                  title={t("changePassword")}
+                  style={{ fontSize: "1.2rem", border: "1px solid var(--border)", padding: "0.4rem", cursor: "pointer" }}
+                >
+                  🔑
+                </button>
 
                 <button
                   onClick={handleLogout}

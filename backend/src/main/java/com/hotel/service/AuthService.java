@@ -61,4 +61,17 @@ public class AuthService {
                                 .language(user.getLanguage())
                                 .build();
         }
+
+        @org.springframework.transaction.annotation.Transactional
+        public void changePassword(String username, String oldPassword, String newPassword) {
+                User user = userRepository.findByUsername(username)
+                                .orElseThrow(() -> new RuntimeException("User not found"));
+
+                if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+                        throw new RuntimeException("Invalid old password");
+                }
+
+                user.setPassword(passwordEncoder.encode(newPassword));
+                userRepository.save(user);
+        }
 }
