@@ -19,6 +19,7 @@ const BoardWrite = () => {
         { value: "HOTEL_STORY", label: t("hotelStory") },
         { value: "RESTAURANT_STORY", label: t("restaurantStory") },
         { value: "BAR_STORY", label: t("barStory") },
+        { value: "QNA", label: 'QnA' },
     ];
 
     useEffect(() => {

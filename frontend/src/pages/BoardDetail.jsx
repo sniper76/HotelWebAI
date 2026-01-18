@@ -93,13 +93,26 @@ const BoardDetail = () => {
 
     const isOwner = user && (user.username === board.createdBy || user.role === "ADMIN");
 
+    let categoryText = 'QnA';
+    switch (board.category) {
+        case 'HOTEL_STORY':
+            categoryText = t('hotelStory');
+            break;
+        case 'RESTAURANT_STORY':
+            categoryText = t('restaurantStory');
+            break;
+        case 'BAR_STORY':
+            categoryText = t('barStory');
+            break;
+    }
+
     return (
         <div className="container" style={{ marginTop: "2rem", maxWidth: "800px" }}>
             <div className="card">
                 {/* Header */}
                 <div style={{ borderBottom: "1px solid var(--border)", paddingBottom: "1rem", marginBottom: "1rem" }}>
                     <span className="badge" style={{ marginBottom: "0.5rem", display: "inline-block" }}>
-                        {t(board.category === 'HOTEL_STORY' ? 'hotelStory' : board.category === 'RESTAURANT_STORY' ? 'restaurantStory' : 'barStory')}
+                        {categoryText}
                     </span>
                     <h1 style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>{board.title}</h1>
                     <div style={{ display: "flex", justifyContent: "space-between", color: "var(--text-secondary)", fontSize: "0.9rem" }}>

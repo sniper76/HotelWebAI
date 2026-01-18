@@ -206,6 +206,7 @@ const resources = {
       "discount": "Discount",
       "finalPrice": "Final Price",
       "originalPrice": "Original Price",
+      "guestName": "Guest Name",
     }
   },
   ko: {
@@ -412,6 +413,7 @@ const resources = {
       "discount": "할인",
       "finalPrice": "최종 금액",
       "originalPrice": "원래 금액",
+      "guestName": "예약자명",
     }
   },
   fil: {
@@ -588,6 +590,7 @@ const resources = {
       "bankName": "Pangalan ng Bangko",
       "accountHolder": "Pangalan ng May-ari",
       "accountNumber": "Numero ng Account",
+      "guestName": "Pangalan ng Bisita",
     }
   }
 };

@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import api from "../api/axiosConfig";
 import { useAuth } from "../context/AuthContext";
+import moment from "moment";
 
 const BoardList = () => {
     const { t } = useTranslation();
@@ -24,6 +25,7 @@ const BoardList = () => {
         { value: "HOTEL_STORY", label: t("hotelStory") },
         { value: "RESTAURANT_STORY", label: t("restaurantStory") },
         { value: "BAR_STORY", label: t("barStory") },
+        { value: "QNA", label: 'QnA' },
     ];
 
     useEffect(() => {
@@ -173,7 +175,7 @@ const BoardList = () => {
                                             )}
                                         </td>
                                         <td>{board.createdBy}</td>
-                                        <td className="desktop-only">{new Date(board.createdAt).toLocaleDateString()}</td>
+                                        <td className="desktop-only">{moment(board.createdAt).format("YYYY-MM-DD")}</td>
                                         <td className="desktop-only">{board.viewCount}</td>
                                     </tr>
                                 ))

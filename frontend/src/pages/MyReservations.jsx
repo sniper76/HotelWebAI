@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../api/axiosConfig";
 import { useTranslation } from "react-i18next";
+import moment from "moment";
 
 const MyReservations = () => {
   const [reservations, setReservations] = useState([]);
@@ -10,7 +11,14 @@ const MyReservations = () => {
     const fetchReservations = async () => {
       try {
         const response = await api.get("/reservations");
-        setReservations(response.data);
+        console.log(response.data);
+        setReservations(response.data.map(res => {
+          return {
+            ...res,
+            checkInDate: moment(res.checkInTime).format("YYYY-MM-DD"),
+            checkOutDate: moment(res.checkOutTime).format("YYYY-MM-DD")
+          }
+        }));
       } catch (error) {
         console.error("Failed to fetch reservations", error);
       }
@@ -66,8 +74,8 @@ const MyReservations = () => {
                 {res.currency === "KRW"
                   ? "₩"
                   : res.currency === "PHP"
-                  ? "₱"
-                  : "$"}
+                    ? "₱"
+                    : "$"}
                 {res.totalPrice}
               </div>
               <div

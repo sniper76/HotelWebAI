@@ -116,23 +116,28 @@ const Home = () => {
     }
   };
 
+  const getSearchParams = () => {
+    const today = new Date(searchParams?.checkInDate);
+    const departureTime = new Date(searchParams?.checkInTime);
+    today.setDate(today.getDate());
+    today.setHours(departureTime.getHours(), departureTime.getMinutes(), 0, 0);
+
+    const tomorrow = new Date(searchParams?.checkOutDate);
+    const arrivalTime = new Date(searchParams?.checkOutTime);
+    tomorrow.setDate(tomorrow.getDate());
+    tomorrow.setHours(arrivalTime.getHours(), arrivalTime.getMinutes(), 0, 0);
+    const params = {
+      ...searchParams,
+      checkInTime: toLocalISO(today),
+      checkOutTime: toLocalISO(tomorrow)
+    };
+    return params;
+  }
+
   const handleSearch = async (e) => {
     e.preventDefault();
     try {
-      const today = new Date(searchParams?.checkInDate);
-      const departureTime = new Date(searchParams?.checkInTime);
-      today.setDate(today.getDate());
-      today.setHours(departureTime.getHours(), departureTime.getMinutes(), 0, 0);
-
-      const tomorrow = new Date(searchParams?.checkOutDate);
-      const arrivalTime = new Date(searchParams?.checkOutTime);
-      tomorrow.setDate(tomorrow.getDate());
-      tomorrow.setHours(arrivalTime.getHours(), arrivalTime.getMinutes(), 0, 0);
-      const params = {
-        ...searchParams,
-        checkInTime: toLocalISO(today),
-        checkOutTime: toLocalISO(tomorrow)
-      };
+      const params = getSearchParams();
       // console.log('params', params, searchParams);
       const response = await api.get("/reservations/search", {
         params: params,
@@ -166,8 +171,8 @@ const Home = () => {
     try {
       await api.post("/reservations", {
         roomIds: selectedRooms,
-        checkInTime: searchParams.checkInTime, // Updated param name
-        checkOutTime: searchParams.checkOutTime, // Updated param name
+        checkInTime: getSearchParams().checkInTime, // Updated param name
+        checkOutTime: getSearchParams().checkOutTime, // Updated param name
         isLateCheckout,
         currency,
       });

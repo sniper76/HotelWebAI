@@ -227,7 +227,7 @@ const DiscountManagement = () => {
                         ))}
                         {policies.length === 0 && (
                             <tr>
-                                <td colSpan="4" className="text-center" style={{ padding: "1rem" }}>{t("noPolicies")}</td>
+                                <td colSpan="4" style={{ textAlign: "center", padding: "2rem" }}>{t("noPolicies")}</td>
                             </tr>
                         )}
                     </tbody>

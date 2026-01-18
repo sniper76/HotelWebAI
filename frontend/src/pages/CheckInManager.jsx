@@ -3,6 +3,7 @@ import axios from "../api/axiosConfig";
 import { useAuth } from "../context/AuthContext";
 import { useTranslation } from "react-i18next";
 import html2canvas from "html2canvas";
+import moment from "moment";
 
 const CheckInManager = () => {
   const [hotels, setHotels] = useState([]);
@@ -50,6 +51,7 @@ const CheckInManager = () => {
           date: date,
         },
       });
+      console.log(response.data);
       setReservations(response.data);
     } catch (error) {
       console.error("Error fetching reservations:", error);
@@ -170,6 +172,7 @@ const CheckInManager = () => {
                 >
                   <th style={{ padding: "0.5rem" }}>{t("id")}</th>
                   <th style={{ padding: "0.5rem" }}>{t("room")}</th>
+                  <th style={{ padding: "0.5rem" }}>{t("guestName")}</th>
                   <th style={{ padding: "0.5rem" }}>{t("checkInDate")}</th>
                   <th style={{ padding: "0.5rem" }}>{t("checkOutDate")}</th>
                   <th style={{ padding: "0.5rem" }}>{t("status")}</th>
@@ -187,8 +190,9 @@ const CheckInManager = () => {
                     <td style={{ padding: "0.5rem" }}>
                       {res.rooms.map((r) => r.roomNumber).join(", ")}
                     </td>
-                    <td style={{ padding: "0.5rem" }}>{res.checkInDate}</td>
-                    <td style={{ padding: "0.5rem" }}>{res.checkOutDate}</td>
+                    <td style={{ padding: "0.5rem" }}>{res.guestName}</td>
+                    <td style={{ padding: "0.5rem" }}>{moment(res.checkInTime).format("YYYY-MM-DD")}</td>
+                    <td style={{ padding: "0.5rem" }}>{moment(res.checkOutTime).format("YYYY-MM-DD")}</td>
                     <td style={{ padding: "0.5rem" }}>{res.status}</td>
                     <td style={{ padding: "0.5rem" }}>
                       {res.totalPrice} {res.currency}
@@ -225,7 +229,7 @@ const CheckInManager = () => {
                 ))}
                 {reservations.length === 0 && (
                   <tr>
-                    <td colSpan="7" className="text-center">
+                    <td colSpan="7" style={{ textAlign: "center", padding: "2rem" }}>
                       {t("noReservations")}
                     </td>
                   </tr>
