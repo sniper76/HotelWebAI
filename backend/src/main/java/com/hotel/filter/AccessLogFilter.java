@@ -55,6 +55,11 @@ public class AccessLogFilter extends OncePerRequestFilter {
                 // If it's anonymous, auth.getName() returns "anonymousUser". We check
                 // specifically.
 
+                // Exclude Admin Menus
+                if (url.startsWith("/api/admin")) {
+                    return;
+                }
+
                 AccessLog accessLog = AccessLog.builder()
                         .method(method)
                         .url(url)
