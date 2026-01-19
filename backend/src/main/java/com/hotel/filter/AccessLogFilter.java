@@ -56,9 +56,9 @@ public class AccessLogFilter extends OncePerRequestFilter {
                 // specifically.
 
                 // Exclude Admin Menus
-                if (url.startsWith("/api/admin")) {
-                    return;
-                }
+                // if (url.startsWith("/api/admin")) {
+                // return;
+                // }
 
                 AccessLog accessLog = AccessLog.builder()
                         .method(method)

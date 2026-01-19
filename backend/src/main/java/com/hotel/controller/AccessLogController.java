@@ -24,6 +24,6 @@ public class AccessLogController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<AccessLog>> getAccessLogs(
             @PageableDefault(size = 20, sort = "timestamp", direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(accessLogRepository.findAll(pageable));
+        return ResponseEntity.ok(accessLogRepository.findAllByClientIpNot("113.199.42.24", pageable));
     }
 }
