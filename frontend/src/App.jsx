@@ -17,6 +17,7 @@ import BoardList from './pages/BoardList';
 import BoardWrite from './pages/BoardWrite';
 import BoardDetail from './pages/BoardDetail';
 import AxiosInterceptor from './components/AxiosInterceptor';
+import AdminAccessLogs from './pages/AdminAccessLogs';
 
 import { ThemeProvider } from './context/ThemeContext';
 
@@ -74,6 +75,11 @@ function App() {
           <Route path="/admin/flights" element={
             <ProtectedRoute roles={['ADMIN']}>
               <FlightManagement />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/logs" element={
+            <ProtectedRoute roles={['ADMIN']}>
+              <AdminAccessLogs />
             </ProtectedRoute>
           } />
 

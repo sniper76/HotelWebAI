@@ -92,6 +92,7 @@ const Navbar = () => {
                 <>
                   <Link to="/admin/users" onClick={closeMenu}>{t("userManagement")}</Link>
                   <Link to="/admin/flights" onClick={closeMenu}>{t("flightManagement")}</Link>
+                  <Link to="/admin/logs" onClick={closeMenu}>{t("accessLogs")}</Link>
                 </>
               )}
 

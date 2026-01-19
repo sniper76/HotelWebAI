@@ -24,6 +24,12 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final CustomUserDetailsService userDetailsService;
+    private final com.hotel.repository.AccessLogRepository accessLogRepository;
+
+    @Bean
+    public com.hotel.filter.AccessLogFilter accessLogFilter() {
+        return new com.hotel.filter.AccessLogFilter(accessLogRepository);
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -47,7 +53,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(accessLogFilter(), JwtAuthenticationFilter.class);
 
         return http.build();
     }

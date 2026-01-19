@@ -209,6 +209,14 @@ const resources = {
       "originalPrice": "Original Price",
       "guestName": "Guest Name",
       "checkOutDateMustBeAfterCheckInDate": "Check out date must be after check in date",
+      // Access Logs
+      "accessLogs": "Access Logs",
+      "timestamp": "Timestamp",
+      "method": "Method",
+      "url": "URL",
+      "status": "Status",
+      "clientIp": "Client IP",
+      "requestParams": "Request Params",
     }
   },
   ko: {
@@ -418,6 +426,14 @@ const resources = {
       "originalPrice": "원래 금액",
       "guestName": "예약자명",
       "checkOutDateMustBeAfterCheckInDate": "체크아웃은 체크인 이후만 가능합니다.",
+      // Access Logs
+      "accessLogs": "접속 로그",
+      "timestamp": "일시",
+      "method": "메서드",
+      "url": "URL",
+      "status": "상태",
+      "clientIp": "클라이언트 IP",
+      "requestParams": "요청 파라미터",
     }
   },
   fil: {
