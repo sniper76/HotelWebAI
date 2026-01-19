@@ -13,6 +13,7 @@ const resources = {
       "selectRole": "Select Role",
       "user": "User",
       "owner": "Owner",
+      "hotel": "Hotel",
       "admin": "Admin",
       "language": "Language",
       "ko": "Korean",
@@ -130,7 +131,7 @@ const resources = {
       "deleteAirline": "Delete Airline",
       "deleteFlight": "Delete Flight",
       "selectAirlineOptional": "Select Airline (Optional)",
-      "selectFlightAuto": "Select Flight (Auto-fills Dates)",
+      "selectFlightAuto": "Select Flight (Optional)",
       "chooseAirline": "-- Choose Airline --",
       "chooseFlight": "-- Choose Flight --",
       "searchFailed": "Search failed",
@@ -207,6 +208,7 @@ const resources = {
       "finalPrice": "Final Price",
       "originalPrice": "Original Price",
       "guestName": "Guest Name",
+      "checkOutDateMustBeAfterCheckInDate": "Check out date must be after check in date",
     }
   },
   ko: {
@@ -219,6 +221,7 @@ const resources = {
       "role": "역할",
       "selectRole": "역할 선택",
       "user": "사용자",
+      "hotel": "호텔",
       "owner": "소유자",
       "admin": "관리자",
       "language": "언어",
@@ -337,7 +340,7 @@ const resources = {
       "deleteAirline": "항공사 삭제",
       "deleteFlight": "항공권 삭제",
       "selectAirlineOptional": "항공사 선택 (선택사항)",
-      "selectFlightAuto": "항공권 선택 (날짜 자동 입력)",
+      "selectFlightAuto": "항공권 선택 (선택사항)",
       "chooseAirline": "-- 항공사 선택 --",
       "chooseFlight": "-- 항공권 선택 --",
       "searchFailed": "검색에 실패했습니다",
@@ -414,6 +417,7 @@ const resources = {
       "finalPrice": "최종 금액",
       "originalPrice": "원래 금액",
       "guestName": "예약자명",
+      "checkOutDateMustBeAfterCheckInDate": "체크아웃은 체크인 이후만 가능합니다.",
     }
   },
   fil: {
@@ -426,6 +430,7 @@ const resources = {
       "role": "Papel",
       "selectRole": "Pumili ng Papel",
       "user": "Gumagamit",
+      "hotel": "Hotel",
       "owner": "May-ari",
       "admin": "Admin",
       "language": "Wika",
@@ -544,7 +549,7 @@ const resources = {
       "deleteAirline": "Tanggalin ang Airline",
       "deleteFlight": "Tanggalin ang Flight",
       "selectAirlineOptional": "Pumili ng Airline (Opsyonal)",
-      "selectFlightAuto": "Pumili ng Flight (Auto-fill na petsa)",
+      "selectFlightAuto": "Pumili ng Flight (Opsyonal)",
       "chooseAirline": "-- Pumili ng Airline --",
       "chooseFlight": "-- Pumili ng Flight --",
       "searchFailed": "Nabigo ang Paghahanap",
@@ -591,6 +596,7 @@ const resources = {
       "accountHolder": "Pangalan ng May-ari",
       "accountNumber": "Numero ng Account",
       "guestName": "Pangalan ng Bisita",
+      "checkOutDateMustBeAfterCheckInDate": "Check out date must be after check in date",
     }
   }
 };

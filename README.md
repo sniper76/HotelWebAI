@@ -52,6 +52,26 @@ npm run dev
    java -jar build/libs/hotel-reservation-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
    ```
    (운영 환경 설정 파일 `application-prod.yml`이 필요할 수 있습니다.)
+4. Ubuntu 서비스로 등록합니다:
+   ```bash
+   sudo nano /etc/systemd/system/hotel_web.service
+
+   [Unit]
+   Description=Your Spring Boot Hotel Web Application Service
+   After=syslog.target network.target
+
+   [Service]
+   User=ubuntu
+   ExecStart=/usr/bin/java -Dprod_user=사용자명 -Dprod_pass=패스워드 -Dserver.port=8088 -jar /home/ubuntu/backend/hotel-reservation-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
+   SuccessExitStatus=143
+   TimeoutStopSec=10
+   Restart=on-failure
+   RestartSec=5
+
+   [Install]
+   WantedBy=multi-user.target
+   ```
+   
 
 #### Frontend (React + Vite)
 1. `frontend` 디렉토리로 이동합니다.
@@ -65,5 +85,7 @@ npm run dev
    ```bash
    npm install -g serve
    serve -s dist
+
+   sudo systemctl restart nginx
    ```
 

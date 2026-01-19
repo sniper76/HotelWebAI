@@ -126,6 +126,10 @@ const Home = () => {
     const arrivalTime = new Date(searchParams?.checkOutTime);
     tomorrow.setDate(tomorrow.getDate());
     tomorrow.setHours(arrivalTime.getHours(), arrivalTime.getMinutes(), 0, 0);
+    if (today > tomorrow) {
+      alert(t('checkOutDateMustBeAfterCheckInDate'));
+      return;
+    }
     const params = {
       ...searchParams,
       checkInTime: toLocalISO(today),
@@ -138,6 +142,7 @@ const Home = () => {
     e.preventDefault();
     try {
       const params = getSearchParams();
+      if (!params) return;
       // console.log('params', params, searchParams);
       const response = await api.get("/reservations/search", {
         params: params,
@@ -339,7 +344,7 @@ const Home = () => {
               <div
                 style={{ display: "flex", alignItems: "center", gap: "1rem" }}
               >
-                <label
+                {/* <label
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -353,7 +358,7 @@ const Home = () => {
                     onChange={(e) => setIsLateCheckout(e.target.checked)}
                   />
                   {t("lateCheckout")}
-                </label>
+                </label> */}
                 <button onClick={handleBook} className="btn btn-primary">
                   {t("bookSelected")} ({selectedRooms.length})
                 </button>
