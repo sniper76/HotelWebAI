@@ -1,6 +1,7 @@
 package com.hotel.controller;
 
 import com.hotel.dto.BoardDto;
+import com.hotel.dto.BoardListResponse;
 import com.hotel.dto.CommentDto;
 import com.hotel.entity.BoardCategory;
 import com.hotel.service.BoardService;
@@ -20,9 +21,9 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping
-    public ResponseEntity<Page<BoardDto>> getBoards(
+    public ResponseEntity<BoardListResponse> getBoards(
             @RequestParam(required = false) BoardCategory category,
-            @RequestParam(required = false) String searchType,
+            @RequestParam(required = false, defaultValue = "all") String searchType,
             @RequestParam(required = false) String keyword,
             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok(boardService.getBoards(category, searchType, keyword, pageable));

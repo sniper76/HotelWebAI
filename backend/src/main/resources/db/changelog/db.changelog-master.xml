@@ -16,5 +16,6 @@
     <include file="classpath:/db/changelog/changes/011-add-bank-info-to-hotels.xml"/>
     <include file="classpath:/db/changelog/changes/012-add-discount-management.xml"/>
     <include file="classpath:/db/changelog/changes/013-create-access-logs.xml"/>
+    <include file="classpath:/db/changelog/changes/014-add-board-notice.xml"/>
 
 </databaseChangeLog>

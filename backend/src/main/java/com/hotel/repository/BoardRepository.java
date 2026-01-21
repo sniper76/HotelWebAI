@@ -1,6 +1,10 @@
 package com.hotel.repository;
 
 import com.hotel.entity.Board;
+import com.hotel.entity.BoardCategory;
+
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -10,4 +14,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long>, JpaSpecificationExecutor<Board> {
+    List<Board> findByCategoryAndIsNoticeTrueOrderByCreatedAtDesc(BoardCategory category);
+
+    List<Board> findByIsNoticeTrueOrderByCreatedAtDesc();
 }

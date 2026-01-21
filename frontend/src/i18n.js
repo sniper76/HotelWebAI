@@ -217,6 +217,7 @@ const resources = {
       "status": "Status",
       "clientIp": "Client IP",
       "requestParams": "Request Params",
+      "notice": "Notice",
     }
   },
   ko: {
@@ -434,6 +435,7 @@ const resources = {
       "status": "상태",
       "clientIp": "클라이언트 IP",
       "requestParams": "요청 파라미터",
+      "notice": "공지",
     }
   },
   fil: {
@@ -613,6 +615,15 @@ const resources = {
       "accountNumber": "Numero ng Account",
       "guestName": "Pangalan ng Bisita",
       "checkOutDateMustBeAfterCheckInDate": "Check out date must be after check in date",
+      // Access Logs
+      "accessLogs": "Access Logs",
+      "timestamp": "Timestamp",
+      "method": "Method",
+      "url": "URL",
+      "status": "Status",
+      "clientIp": "Client IP",
+      "requestParams": "Request Params",
+      "notice": "Notice",
     }
   }
 };

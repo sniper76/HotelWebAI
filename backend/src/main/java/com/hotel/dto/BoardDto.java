@@ -12,6 +12,7 @@ public class BoardDto {
     private String title;
     private String content;
     private Long viewCount;
+    private Boolean isNotice;
     private Long likeCount;
     private Long commentCount;
     private String createdBy; // username

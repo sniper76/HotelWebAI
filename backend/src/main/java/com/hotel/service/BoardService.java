@@ -1,6 +1,7 @@
 package com.hotel.service;
 
 import com.hotel.dto.BoardDto;
+import com.hotel.dto.BoardListResponse;
 import com.hotel.dto.CommentDto;
 import com.hotel.entity.Board;
 import com.hotel.entity.BoardCategory;
@@ -31,10 +32,28 @@ public class BoardService {
     private final CommentRepository commentRepository;
     private final BoardLikeRepository boardLikeRepository;
 
-    public Page<BoardDto> getBoards(BoardCategory category, String searchType, String keyword, Pageable pageable) {
+    public BoardListResponse getBoards(BoardCategory category, String searchType, String keyword, Pageable pageable) {
+        // 1. Get Notices (Pinned)
+        List<Board> notices;
+        if (category != null) {
+            notices = boardRepository.findByCategoryAndIsNoticeTrueOrderByCreatedAtDesc(category);
+        } else {
+            notices = boardRepository.findByIsNoticeTrueOrderByCreatedAtDesc();
+        }
+
+        // 2. Get Normal Page (Exclude notices? Or just include them but pinned ones are
+        // duplicate?
+        // Requirement usually: Pinned at top, but also in list? Or pinned at top and
+        // NOT in list below?
+        // "Pinned at top ... even if page moves it stays at top"
+        // Usually implementation: Pinned list separate, Main list filters OUT pinned
+        // ones to avoid duplication.
+        // Let's filter out notices from the main pagination.
+
         Specification<Board> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
             predicates.add(cb.equal(root.get("useYn"), "Y"));
+            predicates.add(cb.equal(root.get("isNotice"), false)); // Exclude notices from main list
 
             if (category != null) {
                 predicates.add(cb.equal(root.get("category"), category));
@@ -54,7 +73,13 @@ public class BoardService {
             return cb.and(predicates.toArray(new Predicate[0]));
         };
 
-        return boardRepository.findAll(spec, pageable).map(this::convertToDto);
+        Page<BoardDto> page = boardRepository.findAll(spec, pageable).map(this::convertToDto);
+        List<BoardDto> noticeDtos = notices.stream().map(this::convertToDto).collect(Collectors.toList());
+
+        return BoardListResponse.builder()
+                .notices(noticeDtos)
+                .page(page)
+                .build();
     }
 
     @Transactional
@@ -63,11 +88,11 @@ public class BoardService {
         board.setCategory(dto.getCategory());
         board.setTitle(dto.getTitle());
         board.setContent(dto.getContent());
-        // createdBy handled by auditing or manually if needed, but BaseEntity usually
-        // handles it if properly set up with SecurityContext
-        // For simplicity in this mono-repo setup without full auditing config, we might
-        // need to set it manually from context if BaseEntity doesn't catch it.
-        // Assuming BaseEntity works with SecurityContextHolder.
+        if (dto.getIsNotice() != null) {
+            // Check admin permission? Controller/Security should handle but double check
+            // safely
+            board.setIsNotice(dto.getIsNotice());
+        }
 
         return boardRepository.save(board).getId();
     }
@@ -123,6 +148,9 @@ public class BoardService {
         board.setTitle(dto.getTitle());
         board.setContent(dto.getContent());
         board.setCategory(dto.getCategory());
+        if (dto.getIsNotice() != null) {
+            board.setIsNotice(dto.getIsNotice());
+        }
         // Automatic Dirty Checking updates DB
     }
 
@@ -220,6 +248,7 @@ public class BoardService {
         dto.setCreatedAt(e.getCreatedAt());
         dto.setUpdatedBy(e.getUpdatedBy());
         dto.setUpdatedAt(e.getUpdatedAt());
+        dto.setIsNotice(e.getIsNotice());
         return dto;
     }
 

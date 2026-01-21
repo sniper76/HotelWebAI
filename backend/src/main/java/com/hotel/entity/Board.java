@@ -27,6 +27,9 @@ public class Board extends BaseEntity {
     @Column(name = "view_count", nullable = false)
     private Long viewCount = 0L;
 
+    @Column(name = "is_notice", nullable = false)
+    private Boolean isNotice = false;
+
     public void incrementViewCount() {
         this.viewCount++;
     }

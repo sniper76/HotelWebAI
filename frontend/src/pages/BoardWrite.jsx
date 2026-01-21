@@ -2,17 +2,21 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import api from "../api/axiosConfig";
+import { useAuth } from "../context/AuthContext";
 
 const BoardWrite = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const { id } = useParams(); // If present, edit mode
     const isEdit = !!id;
+    const { user } = useAuth(); // Get user for admin check
+    console.log('user', user);
 
     const [formData, setFormData] = useState({
         category: "HOTEL_STORY",
         title: "",
         content: "",
+        isNotice: false,
     });
 
     const categories = [
@@ -35,6 +39,7 @@ const BoardWrite = () => {
                 category: response.data.category,
                 title: response.data.title,
                 content: response.data.content,
+                isNotice: response.data.isNotice || false,
             });
         } catch (error) {
             console.error("Failed to fetch board", error);
@@ -60,8 +65,11 @@ const BoardWrite = () => {
     };
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        const { name, value, type, checked } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: type === 'checkbox' ? checked : value
+        }));
     };
 
     return (
@@ -72,16 +80,33 @@ const BoardWrite = () => {
                 <form onSubmit={handleSubmit} className="md-form">
                     <div className="input-group">
                         <label className="md-label always-float">{t("category")}</label>
-                        <select
-                            name="category"
-                            className="md-input"
-                            value={formData.category}
-                            onChange={handleChange}
-                        >
-                            {categories.map(cat => (
-                                <option key={cat.value} value={cat.value}>{cat.label}</option>
-                            ))}
-                        </select>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <select
+                                name="category"
+                                className="md-input"
+                                value={formData.category}
+                                onChange={handleChange}
+                                style={{ flex: 1 }}
+                            >
+                                {categories.map(cat => (
+                                    <option key={cat.value} value={cat.value}>{cat.label}</option>
+                                ))}
+                            </select>
+                            {/* Admin only Notice Checkbox */}
+                            {user && user.role === "ADMIN" && (
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <input
+                                        type="checkbox"
+                                        id="isNotice"
+                                        name="isNotice"
+                                        checked={formData.isNotice}
+                                        onChange={handleChange}
+                                        style={{ width: '20px', height: '20px', marginRight: '5px' }}
+                                    />
+                                    <label htmlFor="isNotice" style={{ cursor: 'pointer', fontWeight: 'bold' }}>{t("notice")}</label>
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                     <div className="input-group">

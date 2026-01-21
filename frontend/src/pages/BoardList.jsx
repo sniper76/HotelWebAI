@@ -11,6 +11,7 @@ const BoardList = () => {
     const { user } = useAuth();
     const [searchParams, setSearchParams] = useSearchParams();
 
+    const [notices, setNotices] = useState([]);
     const [boards, setBoards] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(false);
@@ -47,8 +48,10 @@ const BoardList = () => {
             }
 
             const response = await api.get("/boards", { params });
-            setBoards(response.data.content);
-            setTotalPages(response.data.totalPages);
+            // Structure changed: { notices: [...], page: { content: [...], totalPages: ... } }
+            setNotices(response.data.notices || []);
+            setBoards(response.data.page.content); ``
+            setTotalPages(response.data.page.totalPages);
         } catch (error) {
             console.error("Failed to fetch boards", error);
         } finally {
@@ -137,8 +140,8 @@ const BoardList = () => {
                     <table className="md-table">
                         <thead>
                             <tr>
-                                <th style={{ width: "5%" }}>{t("id")}</th>
-                                <th style={{ width: "15%" }} className="desktop-only">{t("category")}</th>
+                                <th style={{ width: "7%" }}>No.</th>
+                                <th style={{ width: "13%" }} className="desktop-only">{t("category")}</th>
                                 <th style={{ width: "46%" }}>{t("title")}</th>
                                 <th style={{ width: "10%" }}>{t("author")}</th>
                                 <th style={{ width: "12%" }} className="desktop-only">{t("date")}</th>
@@ -146,7 +149,38 @@ const BoardList = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {boards.length === 0 ? (
+                            {/* Notices (Pinned) */}
+                            {notices.map(notice => (
+                                <tr key={`notice-${notice.id}`} onClick={() => navigate(`/boards/${notice.id}`)} style={{ cursor: "pointer", fontWeight: "bold" }}>
+                                    <td>
+                                        <span className="badge" style={{ backgroundColor: "var(--primary)", color: "white" }}>{t("notice")}</span>
+                                    </td>
+                                    <td className="desktop-only">
+                                        <span className="badge">
+                                            {categories.find(c => c.value === notice.category)?.label || notice.category}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {notice.title}
+                                        {notice.commentCount > 0 && (
+                                            <span style={{ marginLeft: "0.5rem", fontSize: "0.8rem", color: "var(--text-secondary)" }}>
+                                                💬 {notice.commentCount}
+                                            </span>
+                                        )}
+                                        {notice.likeCount > 0 && (
+                                            <span style={{ marginLeft: "0.5rem", fontSize: "0.8rem", color: "var(--error)" }}>
+                                                ❤️ {notice.likeCount}
+                                            </span>
+                                        )}
+                                    </td>
+                                    <td>{notice.createdBy}</td>
+                                    <td className="desktop-only">{moment(notice.createdAt).format("YYYY-MM-DD")}</td>
+                                    <td className="desktop-only">{notice.viewCount}</td>
+                                </tr>
+                            ))}
+
+                            {/* Normal Boards */}
+                            {boards.length === 0 && notices.length === 0 ? (
                                 <tr>
                                     <td colSpan="6" style={{ textAlign: "center", padding: "2rem" }}>
                                         {t("noPosts")}
