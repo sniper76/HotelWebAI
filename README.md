@@ -45,6 +45,7 @@ npm run dev
 1. 프로젝트 루트(`c:\dev\HotelWeb\backend`)에서 빌드 명령어를 실행합니다:
    ```bash
    ./gradlew build -x test
+   ./gradlew test --tests com.hotel.BlockedIpIntegrationTest
    ```
 2. 빌드가 완료되면 `build/libs` 폴더에 JAR 파일이 생성됩니다.
 3. 생성된 JAR 파일을 실행하여 서버를 구동합니다:

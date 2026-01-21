@@ -25,6 +25,7 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final CustomUserDetailsService userDetailsService;
     private final com.hotel.repository.AccessLogRepository accessLogRepository;
+    private final com.hotel.filter.IpBlockFilter ipBlockFilter;
 
     @Bean
     public com.hotel.filter.AccessLogFilter accessLogFilter() {
@@ -53,6 +54,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
+                .addFilterBefore(ipBlockFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(accessLogFilter(), JwtAuthenticationFilter.class);
 

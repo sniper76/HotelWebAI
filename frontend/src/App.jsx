@@ -18,6 +18,7 @@ import BoardWrite from './pages/BoardWrite';
 import BoardDetail from './pages/BoardDetail';
 import AxiosInterceptor from './components/AxiosInterceptor';
 import AdminAccessLogs from './pages/AdminAccessLogs';
+import AdminBlockedIpList from './pages/AdminBlockedIpList';
 
 import { ThemeProvider } from './context/ThemeContext';
 
@@ -80,6 +81,11 @@ function App() {
           <Route path="/admin/logs" element={
             <ProtectedRoute roles={['ADMIN']}>
               <AdminAccessLogs />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/blocked-ips" element={
+            <ProtectedRoute roles={['ADMIN']}>
+              <AdminBlockedIpList />
             </ProtectedRoute>
           } />
 

@@ -17,5 +17,6 @@
     <include file="classpath:/db/changelog/changes/012-add-discount-management.xml"/>
     <include file="classpath:/db/changelog/changes/013-create-access-logs.xml"/>
     <include file="classpath:/db/changelog/changes/014-add-board-notice.xml"/>
+    <include file="classpath:/db/changelog/changes/015-create-blocked-ips.xml"/>
 
 </databaseChangeLog>

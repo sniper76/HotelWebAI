@@ -19,6 +19,7 @@ public class BoardDto {
     private LocalDateTime createdAt;
     private String updatedBy;
     private LocalDateTime updatedAt;
+    private String fullName;
 
     // For list view, we might not need comments
     // For detail view, we will need them

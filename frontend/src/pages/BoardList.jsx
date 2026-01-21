@@ -50,7 +50,7 @@ const BoardList = () => {
             const response = await api.get("/boards", { params });
             // Structure changed: { notices: [...], page: { content: [...], totalPages: ... } }
             setNotices(response.data.notices || []);
-            setBoards(response.data.page.content); ``
+            setBoards(response.data.page.content);
             setTotalPages(response.data.page.totalPages);
         } catch (error) {
             console.error("Failed to fetch boards", error);
@@ -173,7 +173,7 @@ const BoardList = () => {
                                             </span>
                                         )}
                                     </td>
-                                    <td>{notice.createdBy}</td>
+                                    <td>{notice.fullName}</td>
                                     <td className="desktop-only">{moment(notice.createdAt).format("YYYY-MM-DD")}</td>
                                     <td className="desktop-only">{notice.viewCount}</td>
                                 </tr>
@@ -208,7 +208,7 @@ const BoardList = () => {
                                                 </span>
                                             )}
                                         </td>
-                                        <td>{board.createdBy}</td>
+                                        <td>{board.fullName}</td>
                                         <td className="desktop-only">{moment(board.createdAt).format("YYYY-MM-DD")}</td>
                                         <td className="desktop-only">{board.viewCount}</td>
                                     </tr>

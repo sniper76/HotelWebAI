@@ -6,10 +6,13 @@ import com.hotel.dto.CommentDto;
 import com.hotel.entity.Board;
 import com.hotel.entity.BoardCategory;
 import com.hotel.entity.Comment;
+import com.hotel.entity.User;
 import com.hotel.entity.BoardLike;
 import com.hotel.repository.BoardLikeRepository;
 import com.hotel.repository.BoardRepository;
 import com.hotel.repository.CommentRepository;
+import com.hotel.repository.UserRepository;
+
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
@@ -21,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +35,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
     private final BoardLikeRepository boardLikeRepository;
+    private final UserRepository userRepository;
 
     public BoardListResponse getBoards(BoardCategory category, String searchType, String keyword, Pageable pageable) {
         // 1. Get Notices (Pinned)
@@ -249,7 +254,13 @@ public class BoardService {
         dto.setUpdatedBy(e.getUpdatedBy());
         dto.setUpdatedAt(e.getUpdatedAt());
         dto.setIsNotice(e.getIsNotice());
+        dto.setFullName(getUserByLoginId(e.getCreatedBy()).getFullName());
         return dto;
+    }
+
+    private User getUserByLoginId(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     private CommentDto convertCommentToDto(Comment e) {
