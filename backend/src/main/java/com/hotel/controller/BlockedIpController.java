@@ -3,10 +3,12 @@ package com.hotel.controller;
 import com.hotel.dto.BlockedIpDto;
 import com.hotel.service.BlockedIpService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/blocked-ips")
@@ -16,8 +18,9 @@ public class BlockedIpController {
     private final BlockedIpService blockedIpService;
 
     @GetMapping
-    public ResponseEntity<List<BlockedIpDto>> getAllBlockedIps() {
-        return ResponseEntity.ok(blockedIpService.getAllBlockedIps());
+    public ResponseEntity<Page<BlockedIpDto>> getAllBlockedIps(
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(blockedIpService.getAllBlockedIps(pageable));
     }
 
     @PostMapping

@@ -6,20 +6,24 @@ import moment from "moment";
 const BlockedIpList = () => {
     const { t } = useTranslation();
     const [blockedIps, setBlockedIps] = useState([]);
+    const [page, setPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(false);
 
     // Form state
     const [formData, setFormData] = useState({ ipAddress: "", reason: "" });
 
     useEffect(() => {
-        fetchBlockedIps();
+        fetchBlockedIps(0);
     }, []);
 
-    const fetchBlockedIps = async () => {
+    const fetchBlockedIps = async (pageNumber) => {
         setLoading(true);
         try {
-            const response = await api.get("/admin/blocked-ips");
-            setBlockedIps(response.data);
+            const response = await api.get(`/admin/blocked-ips?page=${pageNumber}&size=10&sort=createdAt,desc`);
+            setBlockedIps(response.data.content);
+            setTotalPages(response.data.totalPages);
+            setPage(response.data.number);
         } catch (error) {
             console.error("Failed to fetch blocked IPs", error);
         } finally {
@@ -37,7 +41,7 @@ const BlockedIpList = () => {
         try {
             await api.post("/admin/blocked-ips", formData);
             setFormData({ ipAddress: "", reason: "" });
-            fetchBlockedIps();
+            fetchBlockedIps(0);
             alert(t("saveSuccess"));
         } catch (error) {
             console.error("Failed to block IP", error);
@@ -49,7 +53,7 @@ const BlockedIpList = () => {
         if (!window.confirm(t("confirmDelete"))) return;
         try {
             await api.delete(`/admin/blocked-ips/${id}`);
-            fetchBlockedIps();
+            fetchBlockedIps(page);
         } catch (error) {
             console.error("Failed to delete IP", error);
         }
@@ -130,6 +134,28 @@ const BlockedIpList = () => {
                             )}
                         </tbody>
                     </table>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem', gap: '1rem' }}>
+                    <button
+                        onClick={() => fetchBlockedIps(page - 1)}
+                        disabled={page === 0}
+                        className="btn"
+                        style={{ padding: '0.5rem 1rem' }}
+                    >
+                        {t('prev')}
+                    </button>
+                    <span style={{ display: 'flex', alignItems: 'center' }}>
+                        {page + 1} / {totalPages}
+                    </span>
+                    <button
+                        onClick={() => fetchBlockedIps(page + 1)}
+                        disabled={page === totalPages - 1}
+                        className="btn"
+                        style={{ padding: '0.5rem 1rem' }}
+                    >
+                        {t('next')}
+                    </button>
                 </div>
             </div>
         </div>

@@ -6,12 +6,13 @@ import moment from 'moment';
 const AdminAccessLogs = () => {
     const { t } = useTranslation();
     const [logs, setLogs] = useState([]);
+    const [searchIp, setSearchIp] = useState("");
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
 
-    const fetchLogs = async (pageNumber) => {
+    const fetchLogs = async (pageNumber, ip = searchIp) => {
         try {
-            const response = await api.get(`/admin/logs?page=${pageNumber}&size=20&sort=timestamp,desc`);
+            const response = await api.get(`/admin/logs?page=${pageNumber}&size=20&sort=timestamp,desc${ip ? `&searchIp=${ip}` : ''}`);
             setLogs(response.data.content);
             setTotalPages(response.data.totalPages);
             setPage(response.data.number);
@@ -32,7 +33,22 @@ const AdminAccessLogs = () => {
 
     return (
         <div className="container" style={{ marginTop: '2rem' }}>
-            <h2>{t('accessLogs')}</h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <h2>{t('accessLogs')}</h2>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <input
+                        type="text"
+                        placeholder="IP Search"
+                        value={searchIp}
+                        onChange={(e) => setSearchIp(e.target.value)}
+                        className="md-input"
+                        style={{ padding: '0.5rem' }}
+                    />
+                    <button className="btn btn-primary" onClick={() => fetchLogs(0)}>
+                        {t('search')}
+                    </button>
+                </div>
+            </div>
             <div className="table-container" style={{ overflowX: 'auto', marginTop: '1rem' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '800px' }}>
                     <thead>
